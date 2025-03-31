@@ -275,7 +275,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Typed.js for typing animation in header
 document.addEventListener('DOMContentLoaded', function() {
     new Typed('.typing-text', {
-        strings: ['DUY VINH'],
+        strings: ["DUY VINH"],
         typeSpeed: 150,
         backSpeed: 100,
         loop: true,

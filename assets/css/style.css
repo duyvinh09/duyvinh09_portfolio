@@ -639,7 +639,7 @@ img {
     color: var(--text-color-light);
     background-color: var(--container-color);
     padding: .4em .5em;
-    border-radius: .35em;
+    border-radius: .5em;
     pointer-events: none;
     opacity: 0;
     white-space: nowrap;

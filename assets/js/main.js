@@ -233,21 +233,54 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // Background particle effect
-    const numStars = 120;
-    const starsContainer = document.querySelector(".stars");
-    const body = document.querySelector("body");
-    const bodyHeight = body.scrollHeight;
-    for (let i = 0; i < numStars; i++) {
-        let star = document.createElement("div");
-        star.classList.add("star");
-        star.style.top = `${Math.random() * bodyHeight}px`;
-        star.style.left = `${Math.random() * 98}vw`;
-        let size = Math.random() * 2 + 1;
-        star.style.width = `${size}px`;
-        star.style.height = `${size}px`;
-        star.style.animationDelay = `${Math.random() * 3}s`;
-        starsContainer.appendChild(star);
+    const NUM_STARS = 200;
+    const MAX_MOVEMENT = 250;
+    const MIN_DURATION = 15;
+    const MAX_DURATION = 25;
+    const starsContainer = document.querySelector(".stars-container");
+    let bodyWidth = document.body.scrollWidth;
+    let bodyHeight = document.body.scrollHeight;
+    function createStars() {
+        const fragment = document.createDocumentFragment();
+        for (let i = 0; i < NUM_STARS; i++) {
+            const star = document.createElement("div");
+            star.className = "star";
+            const size = Math.random() * 2 + 1;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.left = `${Math.random() * bodyWidth}px`;
+            star.style.top = `${Math.random() * bodyHeight}px`;
+            setupStarAnimation(star);
+            fragment.appendChild(star);
+        }
+        starsContainer.appendChild(fragment);
     }
+    function setupStarAnimation(star) {
+        const moveX = (Math.random() - 0.5) * MAX_MOVEMENT;
+        const moveY = (Math.random() - 0.5) * MAX_MOVEMENT;
+        const duration = Math.random() * (MAX_DURATION - MIN_DURATION) + MIN_DURATION;
+        star.style.setProperty('--move-x', `${moveX}px`);
+        star.style.setProperty('--move-y', `${moveY}px`);
+        star.style.animationDuration = `${duration}s`;
+        star.addEventListener('animationiteration', resetStarPosition);
+    }
+    function resetStarPosition() {
+        bodyWidth = document.body.scrollWidth;
+        bodyHeight = document.body.scrollHeight;
+        this.style.left = `${Math.random() * bodyWidth}px`;
+        this.style.top = `${Math.random() * bodyHeight}px`;
+        const moveX = (Math.random() - 0.5) * MAX_MOVEMENT;
+        const moveY = (Math.random() - 0.5) * MAX_MOVEMENT;
+        this.style.setProperty('--move-x', `${moveX}px`);
+        this.style.setProperty('--move-y', `${moveY}px`);
+    }
+    const resizeObserver = new ResizeObserver(() => {
+        bodyWidth = document.body.scrollWidth;
+        bodyHeight = document.body.scrollHeight;
+        starsContainer.style.height = `${bodyHeight}px`;
+    });
+    resizeObserver.observe(document.body);
+    createStars();
 
 
     // Language switching functionality

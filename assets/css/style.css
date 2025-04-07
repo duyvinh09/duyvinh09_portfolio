@@ -1305,7 +1305,7 @@ form textarea {
     border-radius: 50%;
     background: var(--first-color);
     box-shadow: 0 0 20px var(--box-shadow);
-    transition: all 0.3s ease;
+    transition: all 0.3s ease-out;
 }
 
 #chatbot-toggler:hover {
@@ -1352,7 +1352,7 @@ body.show-chatbot #chatbot-toggler i:last-child {
     transform: scale(0.2);
     transform-origin: bottom right;
     box-shadow: 0 0 128px 0 rgba(0, 0, 0, 0.1), 0 32px 64px -48px rgba(0, 0, 0, 0.5);
-    transition: all 0.1s ease;
+    transition: all 0.3s ease-in-out;
 }
 
 body.show-chatbot .chatbot-popup {
@@ -1723,7 +1723,7 @@ body.show-emoji-picker em-emoji-picker {
 }
 
 /* Stars */
-.stars {
+.stars-container {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -1731,6 +1731,7 @@ body.show-emoji-picker em-emoji-picker {
     left: 0;
     pointer-events: none;
     z-index: -2;
+    overflow: hidden;
 }
 
 .star {
@@ -1740,12 +1741,16 @@ body.show-emoji-picker em-emoji-picker {
     border-radius: 50%;
     background-color: #ffffff;
     box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
-    animation: twinkle 3s infinite alternate ease-in-out;
+    animation: moveAround linear infinite;
+    will-change: transform, opacity;
 }
 
-@keyframes twinkle {
-    0% { opacity: 0.3; transform: scale(0.8); }
-    100% { opacity: 1; transform: scale(1.2); }
+@keyframes moveAround {
+    0% { opacity: 0; transform: translate(0, 0) scale(0.8); }
+    10% { opacity: 1; }
+    50% { opacity: 1; transform: translate(calc(var(--move-x) * 0.5), calc(var(--move-y) * 0.5)) scale(1);}
+    90% { opacity: 1; }
+    100% { opacity: 0; transform: translate(var(--move-x), var(--move-y)) scale(0.9); }
 }
 
 /* Grid background */

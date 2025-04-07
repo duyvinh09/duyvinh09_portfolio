@@ -198,6 +198,15 @@ window.addEventListener('scroll', function() {
 
 document.addEventListener('DOMContentLoaded', () => {
 
+    // Custom cursor
+    const elements = document.querySelectorAll('*');
+    elements.forEach(element => {
+        const style = window.getComputedStyle(element);
+        if (style.cursor === 'pointer') {
+            element.style.cursor = 'url("./assets/img/mouse/mouse-f2.png"), auto';
+        }
+    });
+
     // ScrollReveal animations
     const sr = ScrollReveal({
         origin: 'top',

@@ -1808,10 +1808,6 @@ body.dark .global_shapes {
         row-gap: 1rem;
     }
 
-    .header-controls {
-        gap: 0.3125rem;
-    }
-
     .background_img {
         object-fit: cover;
         width: 90%;

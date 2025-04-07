@@ -161,18 +161,25 @@ window.addEventListener("scroll", () => {
 // Toggle dark/light mode
 const body = document.querySelector("body");
 const modeToggle = document.querySelector(".dark-light");
+const themeToggle = document.getElementById("themeToggle");
 const savedMode = localStorage.getItem("mode");
 if (savedMode === "dark-mode") {
     body.classList.add("dark");
     modeToggle.classList.add("active");
-} else {
-    body.classList.remove("dark");
-    modeToggle.classList.remove("active");
-}    
+    themeToggle.checked = true;
+}
 modeToggle.addEventListener("click", () => {
-    modeToggle.classList.toggle("active");
+    const isDark = !body.classList.contains("dark");
     body.classList.toggle("dark");
-    localStorage.setItem("mode", body.classList.contains("dark") ? "dark-mode" : "light-mode");
+    modeToggle.classList.toggle("active");
+    themeToggle.checked = isDark;
+    localStorage.setItem("mode", isDark ? "dark-mode" : "light-mode");
+});
+themeToggle.addEventListener("change", function() {
+    const isChecked = this.checked;
+    body.classList.toggle("dark", isChecked);
+    modeToggle.classList.toggle("active", isChecked);
+    localStorage.setItem("mode", isChecked ? "dark-mode" : "light-mode");
 });
 
 
@@ -190,6 +197,7 @@ window.addEventListener('scroll', function() {
 
 
 document.addEventListener('DOMContentLoaded', () => {
+
     // ScrollReveal animations
     const sr = ScrollReveal({
         origin: 'top',
@@ -205,7 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Typed.js for typing animation in header
     new Typed('.typing-text', {
-        strings: ["DUY VINH", "PROGRAMMER", "DEVELOPER", "DESIGNER"],
+        strings: ["DUYVINH", "PROGRAMMER", "DEVELOPER", "DESIGNER"],
         typeSpeed: 150,
         backSpeed: 100,
         loop: true,
@@ -290,8 +298,6 @@ document.getElementById('contact-form').addEventListener('submit', function(even
     const originalButtonText = submitButton.innerHTML;
     submitButton.disabled = true;
     submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> SENDING...';
-    
-    // Send form data via EmailJS
     emailjs.sendForm('service_swfnmkm', 'template_n0r8ice', this)
     .then(function(response) {
         Swal.fire({
@@ -299,7 +305,7 @@ document.getElementById('contact-form').addEventListener('submit', function(even
             title: 'Thành công!',
             text: 'Tin nhắn đã được gửi thành công!',
             showConfirmButton: false,
-            timer: 3000
+            timer: 2000
         });
         document.getElementById('contact-form').reset();
     })
@@ -330,7 +336,6 @@ const chatbotToggler = document.querySelector("#chatbot-toggler");
 const closeChatbot = document.querySelector("#close-chatbot");
 const API_KEY = "AIzaSyAmudee2bOPCIa2YbY4FO82GHnwmMGFiyQ";
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
-
 const userData = {
     message: null,
     file: {
@@ -338,19 +343,18 @@ const userData = {
         mime_type: null
     }
 };
-
-// const chatHistory = [
-//     {
-//         role: "model",
-//         parts: [{ text: `Đinh Duy Vinh (2005), chàng sinh viên đến từ Quảng Ngãi, hiện đang theo học tại Đại học Duy Tân, Đà Nẵng, là một người trẻ đam mê công nghệ và lập trình. Từ thuở nhỏ, Vinh đã có niềm đam mê mãnh liệt với các thiết bị điện tử và luôn muốn tìm hiểu mọi thứ xung quanh. Chính sự tò mò này đã đưa anh đến với thế giới lập trình ngay từ những năm cấp 3, đặc biệt là trong thời gian giãn cách xã hội do dịch COVID-19. Với thời gian rảnh rỗi, Vinh bắt đầu tự học lập trình web, và rồi từ những dự án nhỏ ban đầu, anh đã phát triển được những sản phẩm hữu ích cho cộng đồng.
-// Những dự án mà Vinh thực hiện không chỉ đơn giản là những sản phẩm công nghệ mà còn là minh chứng cho sự sáng tạo và khả năng giải quyết vấn đề của anh. Anh đã tự tay xây dựng một loạt các dự án đa dạng như hệ thống quản lý sinh viên, web game giải trí, website chống lừa đảo, trang web tải ảnh từ Imgur, công cụ tạo mã QR code, dự báo thời tiết trực tuyến, và cả extension Chrome giúp đánh giá nhanh giảng viên của trường Đại học Duy Tân. Không dừng lại ở đó, Vinh còn đắm chìm vào việc khai thác API từ các mạng xã hội như Instagram, Facebook, TikTok và Zalo để lấy thông tin người dùng. Anh cũng đã thử sức với việc tạo module iOS để crack ứng dụng Locket, phát triển API tải video từ TikTok, tạo web chuyển đổi 2FA, và không thể không nhắc đến các bot Telegram mà Vinh viết để tự động hóa các tác vụ một cách hiệu quả.
-// Vinh không chỉ giỏi trong việc phát triển các dự án công nghệ mà còn luôn mong muốn chia sẻ những gì mình học được với cộng đồng. Kênh YouTube của anh (YouTube: @duyvinh09) là nơi anh chia sẻ những mẹo, thủ thuật và tiện ích cực kỳ hữu ích mà anh đã tự tìm ra, giúp đỡ mọi người trong hành trình học hỏi công nghệ. Ngoài YouTube, Vinh cũng kết nối và chia sẻ kiến thức qua các nền tảng khác như GitHub (GitHub: duyvinh09) và Facebook (Facebook: duyvinh09), nơi anh luôn sẵn sàng giao lưu, học hỏi từ cộng đồng và giúp đỡ những người có chung niềm đam mê. Đặc biệt, Vinh còn sở hữu một nhóm chat trên Telegram, nơi anh và các bạn có thể trao đổi kiến thức, cùng nhau phát triển và học hỏi từ những người đi trước.
-// Với một portfolio đầy ấn tượng tại duyvinh09.github.io và dinhduyvinh.eu.org, Vinh không ngừng khẳng định khả năng của mình qua mỗi dự án. Anh là một chàng trai luôn nỗ lực học hỏi, phát triển và sẵn sàng chia sẻ với cộng đồng những gì anh biết. Với tinh thần sáng tạo không ngừng nghỉ và sự nhiệt huyết trong từng dự án, Đinh Duy Vinh chắc chắn sẽ còn đạt được nhiều thành công và tiếp tục là nguồn cảm hứng cho thế hệ trẻ đam mê công nghệ.` }],
-//     },
-// ];
-
-const chatHistory = [];
-
+const chatHistory = [
+    {
+        role: "model",
+        parts: [{ text: `Đinh Duy Vinh, sinh năm 2005 tại Quảng Ngãi, là một chàng sinh viên năng động và đầy nhiệt huyết hiện đang theo học ngành Công nghệ Thông tin tại Đại học Duy Tân, Đà Nẵng. Từ thuở nhỏ, Vinh đã say mê tìm hiểu các thiết bị điện tử trong gia đình — từ những cái vợt bắt muỗi, máy cassette đến những mẫu điện thoại cục gạch — với mong muốn khám phá cấu tạo và cách hoạt động của chúng. Niềm tò mò ấy dần dần chuyển thành đam mê lập trình khi anh bước vào những năm cuối cấp ba, đặc biệt trong khoảng thời gian giãn cách xã hội do đại dịch COVID-19.
+Trong suốt quãng thời gian đó, Vinh đã tự mày mò học HTML, CSS thông qua các khóa học miễn phí trực tuyến, rồi tiếp tục khám phá JavaScript và PHP. Anh không ngại thử thách bản thân với những dự án nhỏ đầu tiên, từ việc xây dựng trang web cá nhân cho đến phát triển công cụ đơn giản phục vụ cộng đồng. Chính những trải nghiệm ban đầu này đã tạo tiền đề vững chắc cho hành trình chinh phục công nghệ sau này.
+Tại Đại học Duy Tân, Vinh nhanh chóng khẳng định mình là một lập trình viên đa năng. Với thế mạnh Back end, anh làm chủ PHP (90%) để thiết kế API, xử lý dữ liệu, tích hợp cURL và JSON; đồng thời sử dụng Python (80%) cho các tác vụ web scraping, tự động hóa và xử lý dữ liệu. Anh cũng thông thạo cơ sở dữ liệu MySQL, MongoDB, SQLite và có khả năng bảo mật SSL cơ bản. Trên mặt trận Front end, Vinh linh hoạt với HTML5, CSS3, JavaScript (ES6), sử dụng Tailwind CSS và Bootstrap để tạo giao diện trực quan. Bên cạnh đó, anh vận dụng Figma (30%) và Photoshop để thiết kế giao diện người dùng. Ngoài ra, Vinh còn thành thạo C/C++, Java, Pascal, scripting Shell và sử dụng thành thạo Git, GitHub, Visual Studio Code cùng bộ công cụ Microsoft Office.
+Không chỉ dừng lại ở lý thuyết, Vinh đã hiện thực hóa kỹ năng của mình qua hàng loạt dự án ấn tượng. Anh tự phát triển hệ thống giao diện quản lý sinh viên nhỏ bằng ngôn ngữ Java; tạo web game giải trí với mini game JavaScript nhằm rèn luyện tư duy logic; xây dựng website chống lừa đảo tích hợp Data từ người dung để báo cáo lừa đảo và bot Telegram để nhận diện kẻ gian; và phát triển công cụ tải ảnh từ Imgur giúp blogger, nhà báo lấy nhanh hình ảnh. Ngoài ra, Vinh còn thiết kế trình tạo mã QR code cho URL, văn bản, Wi Fi; trang dự báo thời tiết trực tuyến tích hợp OpenWeather API; extension Chrome hỗ trợ đánh giá nhanh giảng viên dành cho trường Đại học Duy Tân (DTU); API tải video TikTok không watermark, API tải video Facebook; web chuyển đổi mã xác thực hai yếu tố (2FA); module iOS crack Locket Gold, cùng nhiều app để crack lên Pro/Premium; cùng nhiều bot Telegram tự động hóa với nhiều tính năng tiện ích, gửi báo cáo và thu thập dữ liệu. Anh còn khai thác API từ Facebook, Instagram, TikTok và Zalo để thu thập thông tin người dùng, biến ý tưởng thành giải pháp công nghệ hữu ích cho cộng đồng.
+Để giới thiệu portfolio và chia sẻ kiến thức, Vinh duy trì nhiều trang web cá nhân và ứng dụng: dinhduyvinh.me duyvinh09.github.io(hồ sơ tổng hợp), dinhduyvinh.eu.org (trang thông tin thanh toán), duyvinh09.github.io (GitHub Pages), upanh.vercel.app (trang web upload ảnh lên Imgur), crusssh.vercel.app (nơi để vinh sử dụng cho mục đích giải trí), thoitiet2025.vercel.app (dự báo thời tiết), baomoi24h.eu.org (blog thông tin), listgames.vercel.app (danh sách game giải trí) web-qrcode.vercel.app (tạo QR code nhanh) và cùng nhiều trang web khác nữa. Vinh luôn sẵn sàng chia sẻ kiến thức và kinh nghiệm với cộng đồng thông qua nhiều nền tảng mạng xã hội như: Facebook (facebook.com/duyvinh09), X (x.com/duyvinh09), Instagram (instagram.com/dvinh.09), YouTube (youtube.com/@duyvinh09) với những video hướng dẫn mẹo công nghệ chia sẻ nhưng tiện ích, GitHub (github.com/duyvinh09) lưu trữ mã nguồn và tài liệu, Telegram (t.me/duyvinh09) và anh còn có group Telegram (t.me/tienich) là nơi giao lưu, học hỏi và hỗ trợ lẫn nhau.
+Với tinh thần sáng tạo không ngừng và niềm đam mê lan tỏa, Đinh Duy Vinh không chỉ phát triển kỹ năng cá nhân mà còn không ngại chia sẻ, hỗ trợ cộng đồng công nghệ Việt Nam. Mỗi dự án của anh là minh chứng cho khả năng giải quyết vấn đề và khát khao đóng góp – định hướng đưa Vinh trở thành một nguồn cảm hứng cho thế hệ trẻ đam mê lập trình và công nghệ.` }],
+    },
+];
+// const chatHistory = [];
 const initialInputHeight = messageInput.scrollHeight;
 const createMessageElement = (content, ...classes) => {
     const div = document.createElement("div");
@@ -360,17 +364,10 @@ const createMessageElement = (content, ...classes) => {
 };
 const generateBotResponse = async (incomingMessageDiv) => {
     const messageElement = incomingMessageDiv.querySelector(".message-text");
-    
-    // chatHistory.push({
-    //     role: "user",
-    //     parts: [{ text: `Using the details provided above, please address this query: ${userData.message}` }, ...(userData.file.data ? [{ inline_data: userData.file }] : [])],
-    // });
-
     chatHistory.push({
         role: "user",
         parts: [{ text: userData.message }, ...(userData.file.data ? [{ inline_data: userData.file }] : [])],
     });
-
     const requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -378,7 +375,6 @@ const generateBotResponse = async (incomingMessageDiv) => {
             contents: chatHistory
         })
     }
-
     try {
         const response = await fetch(API_URL, requestOptions);
         const data = await response.json();
@@ -427,7 +423,6 @@ const handleOutgoingMessage = (e) => {
         generateBotResponse(incomingMessageDiv);
     }, 600);
 };
-
 messageInput.addEventListener("keydown", (e) => {
     const userMessage = e.target.value.trim();
     if (e.key === "Enter" && userMessage && !e.shiftKey && window.innerWidth > 768) {

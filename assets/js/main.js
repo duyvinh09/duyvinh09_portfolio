@@ -222,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Typed.js for typing animation in header
     new Typed('.typing-text', {
-        strings: ["DUYVINH", "PROGRAMMER", "DEVELOPER", "DESIGNER"],
+        strings: ["<b>DUYVINH</b>", "PROGRAMMER", "DEVELOPER", "DESIGNER"],
         typeSpeed: 150,
         backSpeed: 100,
         loop: true,
@@ -233,27 +233,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // Background particle effect
-    const NUM_STARS = 200;
-    const MAX_MOVEMENT = 250;
-    const MIN_DURATION = 15;
-    const MAX_DURATION = 25;
+    const NUM_STARS = 120;
+    const MAX_MOVEMENT = 200;
+    const MIN_DURATION = 10;
+    const MAX_DURATION = 20;
     const starsContainer = document.querySelector(".stars-container");
     let bodyWidth = document.body.scrollWidth;
     let bodyHeight = document.body.scrollHeight;
     function createStars() {
-        const fragment = document.createDocumentFragment();
-        for (let i = 0; i < NUM_STARS; i++) {
-            const star = document.createElement("div");
-            star.className = "star";
-            const size = Math.random() * 2 + 1;
-            star.style.width = `${size}px`;
-            star.style.height = `${size}px`;
-            star.style.left = `${Math.random() * bodyWidth}px`;
-            star.style.top = `${Math.random() * bodyHeight}px`;
-            setupStarAnimation(star);
-            fragment.appendChild(star);
+        let created = 0;
+        function createBatch() {
+            const fragment = document.createDocumentFragment();
+            for (let i = 0; i < 10 && created < NUM_STARS; i++, created++) {
+                const star = document.createElement("div");
+                star.className = "star";
+                const size = Math.random() * 2 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * bodyWidth}px`;
+                star.style.top = `${Math.random() * bodyHeight}px`;
+                setupStarAnimation(star);
+                fragment.appendChild(star);
+            }
+            starsContainer.appendChild(fragment);
+            if (created < NUM_STARS) {
+                requestIdleCallback(createBatch);
+            }
         }
-        starsContainer.appendChild(fragment);
+        requestIdleCallback(createBatch);
     }
     function setupStarAnimation(star) {
         const moveX = (Math.random() - 0.5) * MAX_MOVEMENT;
@@ -376,6 +383,7 @@ const fileUploadWrapper = document.querySelector(".file-upload-wrapper");
 const fileCancelButton = document.querySelector("#file-cancel");
 const chatbotToggler = document.querySelector("#chatbot-toggler");
 const closeChatbot = document.querySelector("#close-chatbot");
+const scrollToBottomBtn = document.querySelector("#scroll-to-bottom");
 const API_KEY = "AIzaSyAmudee2bOPCIa2YbY4FO82GHnwmMGFiyQ";
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 const userData = {
@@ -385,6 +393,38 @@ const userData = {
         mime_type: null
     }
 };
+let isAutoScrolling = false;
+let isScrollingToBottomRequested = false;
+chatBody.addEventListener("scroll", () => {
+    if (isScrollingToBottomRequested) {
+        scrollToBottomBtn.classList.remove("show");
+        return;
+    }
+
+    if (!isAutoScrolling) {
+        const isScrolledToBottom = chatBody.scrollHeight - chatBody.scrollTop <= chatBody.clientHeight + 100;
+        if (!isScrolledToBottom) {
+            scrollToBottomBtn.classList.add("show");
+        } else {
+            scrollToBottomBtn.classList.remove("show");
+        }
+    }
+});
+scrollToBottomBtn.addEventListener("click", () => {
+    scrollToBottomBtn.classList.remove("show");
+    isAutoScrolling = true;
+    isScrollingToBottomRequested = true;
+    chatBody.scrollTo({ 
+        top: chatBody.scrollHeight, 
+        behavior: "smooth" 
+    });
+    setTimeout(() => {
+        isAutoScrolling = false;
+        setTimeout(() => {
+            isScrollingToBottomRequested = false;
+        }, 100);
+    }, 500);
+});
 const chatHistory = [
     {
         role: "model",
@@ -433,9 +473,19 @@ const generateBotResponse = async (incomingMessageDiv) => {
     } finally {
         userData.file = {};
         incomingMessageDiv.classList.remove("thinking");
+        isAutoScrolling = true;
+        isScrollingToBottomRequested = true;
+        scrollToBottomBtn.classList.remove("show");
         chatBody.scrollTo({ behavior: "smooth", top: chatBody.scrollHeight });
+        setTimeout(() => {
+            isAutoScrolling = false;
+            setTimeout(() => {
+                isScrollingToBottomRequested = false;
+            }, 100);
+        }, 500);
     }
 };
+
 const handleOutgoingMessage = (e) => {
     e.preventDefault();
     userData.message = messageInput.value.trim();
@@ -462,6 +512,14 @@ const handleOutgoingMessage = (e) => {
         const incomingMessageDiv = createMessageElement(messageContent, "bot-message", "thinking");
         chatBody.appendChild(incomingMessageDiv);
         chatBody.scrollTo({ behavior: "smooth", top: chatBody.scrollHeight });
+        isAutoScrolling = true;
+        isScrollingToBottomRequested = true;
+        scrollToBottomBtn.classList.remove("show");
+        chatBody.scrollTo({ behavior: "smooth", top: chatBody.scrollHeight });
+        setTimeout(() => {
+            isAutoScrolling = false;
+            isScrollingToBottomRequested = false;
+        }, 500);
         generateBotResponse(incomingMessageDiv);
     }, 600);
 };

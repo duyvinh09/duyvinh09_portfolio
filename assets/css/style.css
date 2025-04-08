@@ -1419,12 +1419,7 @@ body.show-chatbot .chatbot-popup {
     margin-bottom: 82px;
     flex-direction: column;
     scrollbar-width: thin;
-    scrollbar-color: #f0ffff transparent;
-}
-
-.chat-body,
-.chat-form .message-input:hover {
-    scrollbar-color: #f0ffff transparent;
+    scrollbar-color: var(--second-color) transparent;
 }
 
 .chat-body .message {
@@ -1478,6 +1473,38 @@ body.show-chatbot .chatbot-popup {
     width: 50%;
     margin-top: -7px;
     border-radius: 15px 3px 15px 15px;
+}
+
+.scroll-to-bottom {
+    position: absolute;
+    bottom: 102px;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--first-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+    transform: translateX(-50%) translateY(10px);
+    z-index: 12;
+}
+
+.scroll-to-bottom.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+.scroll-to-bottom:hover {
+    background-color: var(--first-color-alt);
 }
 
 .chat-body .bot-message .thinking-indicator {
@@ -1730,7 +1757,7 @@ body.show-emoji-picker em-emoji-picker {
     top: 0;
     left: 0;
     pointer-events: none;
-    z-index: -2;
+    z-index: -3;
     overflow: hidden;
 }
 
@@ -1746,11 +1773,11 @@ body.show-emoji-picker em-emoji-picker {
 }
 
 @keyframes moveAround {
-    0% { opacity: 0; transform: translate(0, 0) scale(0.8); }
+    0% { opacity: 0; transform: translate3d(0, 0, 0) scale(0.8); }
     10% { opacity: 1; }
-    50% { opacity: 1; transform: translate(calc(var(--move-x) * 0.5), calc(var(--move-y) * 0.5)) scale(1);}
+    50% { opacity: 1; transform: translate3d(calc(var(--move-x) * 0.5), calc(var(--move-y) * 0.5), 0) scale(1);}
     90% { opacity: 1; }
-    100% { opacity: 0; transform: translate(var(--move-x), var(--move-y)) scale(0.9); }
+    100% { opacity: 0; transform: translate3d(var(--move-x), var(--move-y), 0) scale(0.9); }
 }
 
 /* Grid background */
@@ -1823,6 +1850,10 @@ body.dark .global_shapes {
     .map {
         height: 15rem;
         margin-bottom: 1.25rem;
+    }
+
+    .scroll-to-bottom {
+        bottom: 92px;
     }
 
     .home__shape-bg {

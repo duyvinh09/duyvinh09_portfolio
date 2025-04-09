@@ -207,6 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+
     // ScrollReveal animations
     const sr = ScrollReveal({
         origin: 'top',
@@ -232,66 +233,72 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // Language switching functionality - run this FIRST before star animation
+    // Language switching functionality
     const languageBtn = document.getElementById('languageBtn');
+    const elementsToTranslate = document.querySelectorAll('[data-vi]');
     let currentLanguage = localStorage.getItem('language') || 'en';
-    const attributeBackup = new Map();
-    document.querySelectorAll('[data-en], [data-vi]').forEach(element => {
-        const dataEn = element.getAttribute('data-en');
-        const dataVi = element.getAttribute('data-vi');
-        attributeBackup.set(element, { en: dataEn, vi: dataVi });
+    elementsToTranslate.forEach(element => {
+        if (!element.dataset.original) {
+            if ((element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') && element.hasAttribute('placeholder')) {
+                element.dataset.original = element.placeholder;
+            } else {
+                element.dataset.original = element.innerHTML;
+            }
+        }
     });
     function applyLanguage(lang) {
         document.body.classList.remove('language-en', 'language-vi');
         document.body.classList.add(`language-${lang}`);
-        const elementsToTranslate = document.querySelectorAll('[data-en], [data-vi]');
         elementsToTranslate.forEach(element => {
-            if (attributeBackup.has(element)) {
-                const backup = attributeBackup.get(element);
-                if (!element.hasAttribute('data-en') && backup.en) {
-                    element.setAttribute('data-en', backup.en);
+            if ((element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') && element.hasAttribute('placeholder')) {
+                if (lang === 'vi') {
+                    element.placeholder = element.getAttribute('data-vi');
+                } else {
+                    element.placeholder = element.dataset.original;
                 }
-                if (!element.hasAttribute('data-vi') && backup.vi) {
-                    element.setAttribute('data-vi', backup.vi);
-                }
+                return;
             }
-        });
-        elementsToTranslate.forEach(element => {
-            if (element.hasAttribute(`data-${lang}`)) {
-                if ((element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') && 
-                    element.hasAttribute('placeholder')) {
-                    element.placeholder = element.getAttribute(`data-${lang}`);
+            if (lang === 'vi') {
+                const viText = element.getAttribute('data-vi');
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = element.dataset.original;
+                const icon = tempDiv.querySelector('i');
+                const link = tempDiv.querySelector('a');
+                let iconHTML = icon?.outerHTML || '';
+                let finalHTML = viText.trim();
+                if (link) {
+                    const linkText = link.textContent.trim();
+                    const newLink = link.cloneNode(true);
+                    newLink.innerHTML = linkText;
+                    finalHTML = viText.replace(linkText, newLink.outerHTML);
                 }
-                else if (element.tagName === 'BUTTON' || element.classList.contains('button')) {
-                    const translation = element.getAttribute(`data-${lang}`);
-                    const icon = element.querySelector('i')?.outerHTML || '';
-                    element.innerHTML = `${translation}${icon}`.trim();
+                if (icon) {
+                    const textOnly = tempDiv.textContent.replace(icon.textContent, '').trim();
+                    const originalHTML = tempDiv.innerHTML.trim();
+                    const iconIndex = originalHTML.indexOf(icon.outerHTML);
+                    const textIndex = originalHTML.indexOf(textOnly);
+                    if (iconIndex < textIndex) {
+                        finalHTML = `${iconHTML} ${finalHTML}`;
+                    } else {
+                        finalHTML = `${finalHTML} ${iconHTML}`;
+                    }
                 }
-                else {
-                    const translation = element.getAttribute(`data-${lang}`);
-                    const tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = translation;
-                    ['b', 'i', 'a', 'span', 'strong', 'em'].forEach(tag => {
-                        const original = element.querySelector(tag);
-                        const temp = tempDiv.querySelector(tag);
-                        if (original && temp) {
-                            temp.outerHTML = original.outerHTML;
-                        }
-                    });
-                    element.innerHTML = tempDiv.innerHTML;
-                }
+                element.innerHTML = finalHTML.trim();
+            } else {
+                element.innerHTML = element.dataset.original;
             }
         });
         languageBtn.classList.toggle('vi', lang === 'vi');
         localStorage.setItem('language', lang);
         currentLanguage = lang;
     }
-    languageBtn.addEventListener('click', function() {
+    languageBtn.addEventListener('click', () => {
         const newLanguage = currentLanguage === 'en' ? 'vi' : 'en';
         applyLanguage(newLanguage);
     });
     applyLanguage(currentLanguage);
-    
+
+
     // Star animation
     function initStarAnimation() {
         const starsContainer = document.querySelector(".stars-container");
@@ -406,7 +413,6 @@ chatBody.addEventListener("scroll", () => {
         scrollToBottomBtn.classList.remove("show");
         return;
     }
-
     if (!isAutoScrolling) {
         const isScrolledToBottom = chatBody.scrollHeight - chatBody.scrollTop <= chatBody.clientHeight + 100;
         if (!isScrolledToBottom) {

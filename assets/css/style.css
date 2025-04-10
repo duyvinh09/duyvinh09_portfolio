@@ -1798,7 +1798,7 @@ body.show-emoji-picker em-emoji-picker {
 }
 
 /* Stars */
-.stars-container {
+/* .stars-container {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -1826,7 +1826,7 @@ body.show-emoji-picker em-emoji-picker {
     50% { opacity: 1; transform: translate3d(calc(var(--move-x) * 0.5), calc(var(--move-y) * 0.5), 0) scale(1);}
     90% { opacity: 1; }
     100% { opacity: 0; transform: translate3d(var(--move-x), var(--move-y), 0) scale(0.9); }
-}
+} */
 
 /* Grid background */
 .grid_background {

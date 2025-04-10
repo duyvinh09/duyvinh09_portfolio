@@ -4,7 +4,7 @@ window.addEventListener("load", () => {
         document.getElementById("loader").classList.add("hide");
         document.getElementById("home").style.display = "block";
         initAnimations();
-    }, 700);
+    }, 500);
 });
 
 function initAnimations() {
@@ -31,7 +31,7 @@ function initAnimations() {
                 if (entry.isIntersecting) {
                     document.querySelectorAll('.counter').forEach(el => {
                         if (!isNaN(parseInt(el.textContent))) {
-                            animateCounter(el, 3000);
+                            animateCounter(el, 2500);
                         }
                     });
                     counterObserver.disconnect();
@@ -143,7 +143,6 @@ function showMenuManual() {
         menuTimeout = setTimeout(hideMenuAuto, 2500);
     }
 }
-
 const sections = document.querySelectorAll("section[id]");
 window.addEventListener("scroll", () => {
     let scrollY = window.pageYOffset;
@@ -165,22 +164,24 @@ const themeToggle = document.getElementById("themeToggle");
 const savedMode = localStorage.getItem("mode");
 const switchOnSound = new Audio('./assets/sounds/switch-on.mp3');
 const switchOffSound = new Audio('./assets/sounds/switch-off.mp3');
-switchOnSound.volume = 0.9;
-switchOffSound.volume = 0.9;
-const toggleMode = (isDark) => {
+switchOnSound.volume = 1.0;
+switchOffSound.volume = 1.0;
+const toggleMode = (isDark, skipSound = false) => {
     const wasDark = body.classList.contains("dark");
     body.classList.toggle("dark", isDark);
     modeToggle.classList.toggle("active", isDark);
     themeToggle.checked = isDark;
     localStorage.setItem("mode", isDark ? "dark-mode" : "light-mode");
-    if (wasDark !== isDark) {
+    if (!skipSound && wasDark !== isDark) {
         const sound = isDark ? switchOffSound : switchOnSound;
         sound.currentTime = 0;
         sound.play().catch(() => {});
     }
 };
 if (savedMode === "dark-mode") {
-    toggleMode(true);
+    toggleMode(true, true);
+} else {
+    themeToggle.checked = false;
 }
 modeToggle.addEventListener("click", () => {
     toggleMode(!body.classList.contains("dark"));
@@ -307,56 +308,56 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // Star animation
-    function initStarAnimation() {
-        const starsContainer = document.querySelector(".stars-container");
-        if (!starsContainer) return;
-        const NUM_STARS = 120;
-        const MAX_MOVEMENT = 200;
-        const MIN_DURATION = 10;
-        const MAX_DURATION = 20;
-        setTimeout(() => {
-            let bodyWidth = document.body.scrollWidth;
-            let bodyHeight = document.body.scrollHeight;
-            const fragment = document.createDocumentFragment();
-            for (let i = 0; i < NUM_STARS; i++) {
-                const star = document.createElement("div");
-                star.className = "star";
-                const size = Math.random() * 2 + 1;
-                star.style.width = `${size}px`;
-                star.style.height = `${size}px`;
-                star.style.left = `${Math.random() * bodyWidth}px`;
-                star.style.top = `${Math.random() * bodyHeight}px`;
-                const moveX = (Math.random() - 0.5) * MAX_MOVEMENT;
-                const moveY = (Math.random() - 0.5) * MAX_MOVEMENT;
-                const duration = Math.random() * (MAX_DURATION - MIN_DURATION) + MIN_DURATION;
-                star.style.setProperty('--move-x', `${moveX}px`);
-                star.style.setProperty('--move-y', `${moveY}px`);
-                star.style.animationDuration = `${duration}s`;
-                star.addEventListener('animationiteration', function() {
-                    this.style.left = `${Math.random() * document.body.scrollWidth}px`;
-                    this.style.top = `${Math.random() * document.body.scrollHeight}px`;
-                    const newMoveX = (Math.random() - 0.5) * MAX_MOVEMENT;
-                    const newMoveY = (Math.random() - 0.5) * MAX_MOVEMENT;
-                    this.style.setProperty('--move-x', `${newMoveX}px`);
-                    this.style.setProperty('--move-y', `${newMoveY}px`);
-                });
-                fragment.appendChild(star);
-            }
-            starsContainer.appendChild(fragment);
-            const resizeObserver = new ResizeObserver(() => {
-                bodyWidth = document.body.scrollWidth;
-                bodyHeight = document.body.scrollHeight;
-                starsContainer.style.height = `${bodyHeight}px`;
-            });
-            resizeObserver.observe(document.body);
-        }, 500);
-    }
-    setTimeout(initStarAnimation, 300);
+    // function initStarAnimation() {
+    //     const starsContainer = document.querySelector(".stars-container");
+    //     if (!starsContainer) return;
+    //     const NUM_STARS = 120;
+    //     const MAX_MOVEMENT = 200;
+    //     const MIN_DURATION = 10;
+    //     const MAX_DURATION = 20;
+    //     setTimeout(() => {
+    //         let bodyWidth = document.body.scrollWidth;
+    //         let bodyHeight = document.body.scrollHeight;
+    //         const fragment = document.createDocumentFragment();
+    //         for (let i = 0; i < NUM_STARS; i++) {
+    //             const star = document.createElement("div");
+    //             star.className = "star";
+    //             const size = Math.random() * 2 + 1;
+    //             star.style.width = `${size}px`;
+    //             star.style.height = `${size}px`;
+    //             star.style.left = `${Math.random() * bodyWidth}px`;
+    //             star.style.top = `${Math.random() * bodyHeight}px`;
+    //             const moveX = (Math.random() - 0.5) * MAX_MOVEMENT;
+    //             const moveY = (Math.random() - 0.5) * MAX_MOVEMENT;
+    //             const duration = Math.random() * (MAX_DURATION - MIN_DURATION) + MIN_DURATION;
+    //             star.style.setProperty('--move-x', `${moveX}px`);
+    //             star.style.setProperty('--move-y', `${moveY}px`);
+    //             star.style.animationDuration = `${duration}s`;
+    //             star.addEventListener('animationiteration', function() {
+    //                 this.style.left = `${Math.random() * document.body.scrollWidth}px`;
+    //                 this.style.top = `${Math.random() * document.body.scrollHeight}px`;
+    //                 const newMoveX = (Math.random() - 0.5) * MAX_MOVEMENT;
+    //                 const newMoveY = (Math.random() - 0.5) * MAX_MOVEMENT;
+    //                 this.style.setProperty('--move-x', `${newMoveX}px`);
+    //                 this.style.setProperty('--move-y', `${newMoveY}px`);
+    //             });
+    //             fragment.appendChild(star);
+    //         }
+    //         starsContainer.appendChild(fragment);
+    //         const resizeObserver = new ResizeObserver(() => {
+    //             bodyWidth = document.body.scrollWidth;
+    //             bodyHeight = document.body.scrollHeight;
+    //             starsContainer.style.height = `${bodyHeight}px`;
+    //         });
+    //         resizeObserver.observe(document.body);
+    //     }, 500);
+    // }
+    // setTimeout(initStarAnimation, 300);
 });
 
 
 
-// Initialize EmailJS with my Email
+// Initialize EmailJS with contact form
 document.getElementById('contact-form').addEventListener('submit', function(event) {
     event.preventDefault();
     const now = new Date();
@@ -374,7 +375,7 @@ document.getElementById('contact-form').addEventListener('submit', function(even
             title: 'Thành công!',
             text: 'Tin nhắn đã được gửi thành công!',
             showConfirmButton: false,
-            timer: 2000
+            timer: 1500
         });
         document.getElementById('contact-form').reset();
     })
@@ -463,6 +464,8 @@ const createMessageElement = (content, ...classes) => {
     div.innerHTML = content;
     return div;
 };
+const notificationSound = new Audio('./assets/sounds/notification_sound_effect.mp3');
+notificationSound.volume = 1.0;
 const generateBotResponse = async (incomingMessageDiv) => {
     const messageElement = incomingMessageDiv.querySelector(".message-text");
     chatHistory.push({
@@ -481,6 +484,8 @@ const generateBotResponse = async (incomingMessageDiv) => {
         const data = await response.json();
         if (!response.ok) throw new Error(data.error.message);
         const apiResponseText = data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, "$1").trim();
+        notificationSound.currentTime = 0;
+        notificationSound.play().catch(() => {});
         messageElement.innerText = apiResponseText;
         chatHistory.push({
             role: "model",

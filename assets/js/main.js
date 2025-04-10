@@ -245,6 +245,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const languageBtn = document.getElementById('languageBtn');
     const elementsToTranslate = document.querySelectorAll('[data-vi]');
     let currentLanguage = localStorage.getItem('language') || 'en';
+    const languageSound = new Audio('./assets/sounds/language.mp3');
+    languageSound.volume = 1.0;
     elementsToTranslate.forEach(element => {
         if (!element.dataset.original) {
             if ((element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') && element.hasAttribute('placeholder')) {
@@ -254,7 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
-    function applyLanguage(lang) {
+    function applyLanguage(lang, skipSound = false) {
         document.body.classList.remove('language-en', 'language-vi');
         document.body.classList.add(`language-${lang}`);
         elementsToTranslate.forEach(element => {
@@ -299,12 +301,16 @@ document.addEventListener('DOMContentLoaded', () => {
         languageBtn.classList.toggle('vi', lang === 'vi');
         localStorage.setItem('language', lang);
         currentLanguage = lang;
+        if (!skipSound) {
+            languageSound.currentTime = 0;
+            languageSound.play().catch(() => {});
+        }
     }
     languageBtn.addEventListener('click', () => {
         const newLanguage = currentLanguage === 'en' ? 'vi' : 'en';
         applyLanguage(newLanguage);
     });
-    applyLanguage(currentLanguage);
+    applyLanguage(currentLanguage, true);
 
 
     // Star animation

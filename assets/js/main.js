@@ -163,29 +163,51 @@ const body = document.querySelector("body");
 const modeToggle = document.querySelector(".dark-light");
 const themeToggle = document.getElementById("themeToggle");
 const savedMode = localStorage.getItem("mode");
-const switchOnSound = new Audio('./assets/sounds/switch-on.mp3');
-const switchOffSound = new Audio('./assets/sounds/switch-off.mp3');
-switchOnSound.volume = 0.9;
-switchOffSound.volume = 0.9;
+let audioInitialized = false;
+let switchOnSound, switchOffSound;
+const initAudio = () => {
+    if (audioInitialized) return;
+    switchOnSound = new Audio('./assets/sounds/switch-on.mp3');
+    switchOffSound = new Audio('./assets/sounds/switch-off.mp3');
+    switchOnSound.volume = 0.9;
+    switchOffSound.volume = 0.9;
+    switchOnSound.load();
+    switchOffSound.load();
+    audioInitialized = true;
+};
+const enableAudio = () => {
+    initAudio();
+    document.body.removeEventListener('click', enableAudio);
+    document.body.removeEventListener('touchstart', enableAudio);
+};
+document.body.addEventListener('click', enableAudio, { passive: true });
+document.body.addEventListener('touchstart', enableAudio, { passive: true });
 const toggleMode = (isDark) => {
     const wasDark = body.classList.contains("dark");
     body.classList.toggle("dark", isDark);
     modeToggle.classList.toggle("active", isDark);
     themeToggle.checked = isDark;
     localStorage.setItem("mode", isDark ? "dark-mode" : "light-mode");
-    if (wasDark !== isDark) {
+    if (wasDark !== isDark && audioInitialized) {
         const sound = isDark ? switchOffSound : switchOnSound;
         sound.currentTime = 0;
-        sound.play().catch(() => {});
+        const playSound = sound.cloneNode(true);
+        playSound.volume = 0.9;
+        playSound.play().catch(e => {
+            sound.currentTime = 0;
+            sound.play().catch(() => {});
+        });
     }
 };
 if (savedMode === "dark-mode") {
     toggleMode(true);
 }
-modeToggle.addEventListener("click", () => {
+modeToggle.addEventListener("click", (e) => {
+    if (!audioInitialized) initAudio();
     toggleMode(!body.classList.contains("dark"));
 });
 themeToggle.addEventListener("change", function() {
+    if (!audioInitialized) initAudio();
     toggleMode(this.checked);
 });
 
@@ -504,7 +526,6 @@ const generateBotResponse = async (incomingMessageDiv) => {
         }, 500);
     }
 };
-
 const handleOutgoingMessage = (e) => {
     e.preventDefault();
     userData.message = messageInput.value.trim();

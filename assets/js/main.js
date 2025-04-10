@@ -163,23 +163,30 @@ const body = document.querySelector("body");
 const modeToggle = document.querySelector(".dark-light");
 const themeToggle = document.getElementById("themeToggle");
 const savedMode = localStorage.getItem("mode");
-if (savedMode === "dark-mode") {
-    body.classList.add("dark");
-    modeToggle.classList.add("active");
-    themeToggle.checked = true;
-}
-modeToggle.addEventListener("click", () => {
-    const isDark = !body.classList.contains("dark");
-    body.classList.toggle("dark");
-    modeToggle.classList.toggle("active");
+const switchOnSound = new Audio('./assets/sounds/switch-on.mp3');
+const switchOffSound = new Audio('./assets/sounds/switch-off.mp3');
+switchOnSound.volume = 0.9;
+switchOffSound.volume = 0.9;
+const toggleMode = (isDark) => {
+    const wasDark = body.classList.contains("dark");
+    body.classList.toggle("dark", isDark);
+    modeToggle.classList.toggle("active", isDark);
     themeToggle.checked = isDark;
     localStorage.setItem("mode", isDark ? "dark-mode" : "light-mode");
+    if (wasDark !== isDark) {
+        const sound = isDark ? switchOffSound : switchOnSound;
+        sound.currentTime = 0;
+        sound.play().catch(() => {});
+    }
+};
+if (savedMode === "dark-mode") {
+    toggleMode(true);
+}
+modeToggle.addEventListener("click", () => {
+    toggleMode(!body.classList.contains("dark"));
 });
 themeToggle.addEventListener("change", function() {
-    const isChecked = this.checked;
-    body.classList.toggle("dark", isChecked);
-    modeToggle.classList.toggle("active", isChecked);
-    localStorage.setItem("mode", isChecked ? "dark-mode" : "light-mode");
+    toggleMode(this.checked);
 });
 
 

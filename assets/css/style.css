@@ -1449,10 +1449,13 @@ body.show-chatbot .chatbot-popup {
     border-radius: 50%;
     background: none;
     transition: 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .chat-header #close-chatbot:hover {
-    fill: #4169e1;
+    background-color: #4169e1;
 }
 
 .chat-body {

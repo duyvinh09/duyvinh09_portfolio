@@ -422,6 +422,12 @@ const userData = {
 };
 let isAutoScrolling = false;
 let isScrollingToBottomRequested = false;
+let isBotResponding = false;
+function updateSendButtonState() {
+    const isValidMessage = messageInput.value.trim().length > 0;
+    sendMessageButton.style.display = isValidMessage && !isBotResponding ? "block" : "none";
+    sendMessageButton.disabled = isBotResponding;
+}
 chatBody.addEventListener("scroll", () => {
     if (isScrollingToBottomRequested) {
         scrollToBottomBtn.classList.remove("show");
@@ -473,6 +479,8 @@ const createMessageElement = (content, ...classes) => {
 const notificationSound = new Audio('./assets/sounds/notification_sound_effect.mp3');
 notificationSound.volume = 1.0;
 const generateBotResponse = async (incomingMessageDiv) => {
+    isBotResponding = true;
+    updateSendButtonState();
     const messageElement = incomingMessageDiv.querySelector(".message-text");
     chatHistory.push({
         role: "user",
@@ -501,6 +509,8 @@ const generateBotResponse = async (incomingMessageDiv) => {
         messageElement.innerText = error.message;
         messageElement.style.color = "#ff0000";
     } finally {
+        isBotResponding = false;
+        updateSendButtonState();
         userData.file = {};
         incomingMessageDiv.classList.remove("thinking");
         isAutoScrolling = true;
@@ -517,6 +527,7 @@ const generateBotResponse = async (incomingMessageDiv) => {
 };
 const handleOutgoingMessage = (e) => {
     e.preventDefault();
+    if (isBotResponding) return;
     userData.message = messageInput.value.trim();
     messageInput.value = "";
     fileUploadWrapper.classList.remove("file-uploaded");
@@ -554,14 +565,15 @@ const handleOutgoingMessage = (e) => {
 };
 messageInput.addEventListener("keydown", (e) => {
     const userMessage = e.target.value.trim();
-    if (e.key === "Enter" && userMessage && !e.shiftKey && window.innerWidth > 768) {
+    if (e.key === "Enter" && userMessage && !e.shiftKey && window.innerWidth > 768 && !isBotResponding) {
         handleOutgoingMessage(e);
     }
 });
 messageInput.addEventListener("input", (e) => {
     messageInput.style.height = `${initialInputHeight}px`;
     messageInput.style.height = `${messageInput.scrollHeight}px`;
-    document.querySelector(".chat-form").style.boderRadius = messageInput.scrollHeight > initialInputHeight ? "15px" : "32px";
+    document.querySelector(".chat-form").style.borderRadius = messageInput.scrollHeight > initialInputHeight ? "15px" : "32px";
+    updateSendButtonState();
 });
 fileInput.addEventListener("change", (e) => {
     const file = e.target.files[0];
@@ -571,7 +583,6 @@ fileInput.addEventListener("change", (e) => {
         fileUploadWrapper.querySelector("img").src = e.target.result;
         fileUploadWrapper.classList.add("file-uploaded");
         const base64String = e.target.result.split(",")[1];
-        // Store file data in userData
         userData.file = {
             data: base64String,
             mime_type: file.type
@@ -592,6 +603,7 @@ const picker = new EmojiMart.Picker({
         const { selectionStart: start, selectionEnd: end } = messageInput;
         messageInput.setRangeText(emoji.native, start, end, "end");
         messageInput.focus();
+        updateSendButtonState();
     },
     onClickOutside: (e) => {
         if (e.target.id === "emoji-picker") {
@@ -635,7 +647,11 @@ function resetFileInput() {
     userData.file = { data: null, mime_type: null };
     document.querySelector(".chat-form").reset();
 }
-sendMessageButton.addEventListener("click", (e) => handleOutgoingMessage(e));
+sendMessageButton.addEventListener("click", (e) => {
+    if (!isBotResponding) {
+        handleOutgoingMessage(e);
+    }
+});
 document.querySelector("#file-upload").addEventListener("click", (e) => fileInput.click());
 chatbotToggler.addEventListener("click", () => document.body.classList.toggle("show-chatbot"));
 closeChatbot.addEventListener("click", () => document.body.classList.remove("show-chatbot"));

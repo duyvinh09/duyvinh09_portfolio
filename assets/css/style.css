@@ -1420,6 +1420,7 @@ body.show-chatbot #chatbot-toggler i:last-child {
     right: 35px;
     bottom: 90px;
     width: 370px;
+    height: 610px;
     max-width: calc(100vw - 20px);
     overflow: hidden;
     background: #fff;
@@ -1492,6 +1493,7 @@ body.show-chatbot .chatbot-popup {
 
 .chat-body {
     padding: 25px 22px;
+    /* background: #f2f7fe; */
     gap: 20px;
     display: flex;
     height: 460px;
@@ -1710,6 +1712,11 @@ body.show-emoji-picker .chat-controls #emoji-picker {
 
 .chat-form .message-input:valid ~ .chat-controls #send-message {
     display: block;
+}
+
+.chat-form .chat-controls button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .chat-form .file-upload-wrapper {

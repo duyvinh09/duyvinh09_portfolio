@@ -8,39 +8,41 @@ window.addEventListener("load", () => {
 });
 
 function initAnimations() {
-    // 1. Counter animation
-    const initCounter = () => {
-        const animateCounter = (element, duration) => {
-            const target = parseInt(element.textContent);
-            element.textContent = '0';
-            let start = 0;
-            const increment = target / (duration / 16);
-            const updateCounter = () => {
-                start += increment;
-                if (start < target) {
-                    element.textContent = Math.ceil(start);
-                    requestAnimationFrame(updateCounter);
-                } else {
-                    element.textContent = target;
-                }
-            };
-            updateCounter();
+    // 1. Counter animation (Count Up)
+    function countUp(element, duration = 2000) {
+        const target = parseInt(element.textContent);
+        if (isNaN(target)) return;
+        let start = 0;
+        const increment = target / (duration / 16);
+        element.textContent = '0';
+        const updateCounter = () => {
+            start += increment;
+            if (start < target) {
+                element.textContent = Math.ceil(start);
+                requestAnimationFrame(updateCounter);
+            } else {
+                element.textContent = target;
+            }
         };
-        const counterObserver = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
+        updateCounter();
+    }
+    function initCountUp(containerSelector, numberSelector = '.counter') {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    document.querySelectorAll('.counter').forEach(el => {
-                        if (!isNaN(parseInt(el.textContent))) {
-                            animateCounter(el, 2500);
-                        }
+                    document.querySelectorAll(numberSelector).forEach(el => {
+                        countUp(el, 2500);
                     });
-                    counterObserver.disconnect();
+                    observer.disconnect();
                 }
             });
         }, { threshold: 0.5 });
-        const counterContainer = document.querySelector('.profile__info');
-        counterContainer && counterObserver.observe(counterContainer);
-    };
+        
+        const container = document.querySelector(containerSelector);
+        if (container) observer.observe(container);
+    }
+    initCountUp('.profile__info');
+
 
     // 2. Skills animation
     const initSkills = () => {
@@ -58,7 +60,6 @@ function initAnimations() {
         }, { threshold: 0.5 });
         skillsSection && observer.observe(skillsSection);
     };
-    initCounter();
     initSkills();
 }
 
@@ -246,6 +247,32 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
+    // Animation Decrypted Text
+    function applyDecryptEffect(element) {
+        const originalText = element.textContent;
+        const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()_+";
+        let iteration = 0;
+        const duration = 800;
+        const intervalTime = 30;
+        const totalIterations = Math.ceil(duration / intervalTime);
+        const interval = setInterval(() => {
+            element.textContent = originalText
+                .split('')
+                .map((char, index) => {
+                    if (char === ' ') return ' ';
+                    if (index < iteration) return char;
+                    return characters[Math.floor(Math.random() * characters.length)];
+                })
+                .join('');
+            iteration++;
+            if (iteration > originalText.length) {
+                clearInterval(interval);
+                element.textContent = originalText;
+            }
+        }, intervalTime);
+    }
+
+
     // Language switching functionality
     const languageBtn = document.getElementById('languageBtn');
     const elementsToTranslate = document.querySelectorAll('[data-vi]');
@@ -259,6 +286,16 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 element.dataset.original = element.innerHTML;
             }
+        }
+        if (element.classList.contains('profile_profession')) {
+            element.dataset.decrypt = 'true';
+            element.addEventListener('mouseenter', function() {
+                if (!this.isDecrypting) {
+                    this.isDecrypting = true;
+                    applyDecryptEffect(this);
+                    setTimeout(() => { this.isDecrypting = false; }, 1000);
+                }
+            });
         }
     });
     function applyLanguage(lang, skipSound = false) {
@@ -302,6 +339,9 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 element.innerHTML = element.dataset.original;
             }
+            if (element.dataset.decrypt === 'true') {
+                applyDecryptEffect(element);
+            }
         });
         languageBtn.classList.toggle('vi', lang === 'vi');
         localStorage.setItem('language', lang);
@@ -316,6 +356,9 @@ document.addEventListener('DOMContentLoaded', () => {
         applyLanguage(newLanguage);
     });
     applyLanguage(currentLanguage, true);
+    document.querySelectorAll('[data-decrypt="true"]').forEach(el => {
+        applyDecryptEffect(el);
+    });
 
 
     // Star animation

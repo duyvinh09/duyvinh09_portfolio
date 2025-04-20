@@ -478,6 +478,50 @@ const createMessageElement = (content, ...classes) => {
 };
 const notificationSound = new Audio('./assets/sounds/notification_sound_effect.mp3');
 notificationSound.volume = 1.0;
+function markdownToHTML(text) {
+    if (!text) return '';
+    let html = text
+        // Code block (```lang\n...\n```)
+        .replace(/```(\w*)\n([\s\S]*?)```/g, (match, lang, code) => {
+            const safeCode = code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return `<pre><code class="language-${lang || ''}">${safeCode}</code></pre>`;
+        })
+        .replace(/`([^`]+)`/g, '<code>$1</code>') // Inline code (phải đặt sau code block)
+        .replace(/^###### (.*$)/gm, '<h6>$1</h6>') // Tiêu đề
+        .replace(/^##### (.*$)/gm, '<h5>$1</h5>')
+        .replace(/^#### (.*$)/gm, '<h4>$1</h4>')
+        .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+        .replace(/^## (.*$)/gm, '<h2>$1</h2>')
+        .replace(/^# (.*$)/gm, '<h1>$1</h1>')
+        .replace(/^\d+\. (.*$)/gm, '<li>$1</li>') // Danh sách có thứ tự
+        .replace(/^[-*] (.*$)/gm, '<li>$1</li>') // Danh sách không thứ tự
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // In đậm
+        .replace(/\*(.*?)\*/g, '<em>$1</em>') // In nghiêng
+        .replace(/~~(.*?)~~/g, '<del>$1</del>') // Gạch ngang
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>') // Link
+        .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" style="max-width:100%;"/>') // Hình ảnh
+        .replace(/^> (.*$)/gm, '<blockquote>$1</blockquote>') // Blockquote
+        .replace(/^\-\-\-$/gm, '<hr/>'); // Horizontal rule
+    html = html
+        .replace(/(<li>.*<\/li>)+/gms, (m) => {
+            if (m.includes('<ol>') || m.includes('<ul>')) return m;
+            return m.trim().startsWith('<li>1.') ? `<ol>${m}</ol>` : `<ul>${m}</ul>`;
+        });
+    html = html
+        .replace(/\n{2,}/g, '</p><p>') // Đoạn mới
+        .replace(/\n/g, '<br/>')       // Xuống dòng trong đoạn
+        .replace(/(^|<\/[^>]+>)([^<]*?)(<[^>]+>|$)/g, (m, p1, p2, p3) => {
+            if (!p2.trim()) return m;
+            const isBlockElement = /<\/?(h[1-6]|pre|code|ul|ol|li|blockquote|hr)/i.test(p1 + p3);
+            return isBlockElement ? m : p1 + '<p>' + p2 + '</p>' + p3;
+        });
+    return html;
+}
+function formatTime(date = new Date()) {
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
+}
 const generateBotResponse = async (incomingMessageDiv) => {
     isBotResponding = true;
     updateSendButtonState();
@@ -497,10 +541,12 @@ const generateBotResponse = async (incomingMessageDiv) => {
         const response = await fetch(API_URL, requestOptions);
         const data = await response.json();
         if (!response.ok) throw new Error(data.error.message);
-        const apiResponseText = data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, "$1").trim();
+        let apiResponseText = data.candidates[0].content.parts[0].text;
+        apiResponseText = apiResponseText.replace(/\n+$/, '');
+        const htmlResponse = markdownToHTML(apiResponseText);
         notificationSound.currentTime = 0;
         notificationSound.play().catch(() => {});
-        messageElement.innerText = apiResponseText;
+        messageElement.innerHTML = `${htmlResponse}<span class="message-time">${formatTime()}</span>`;
         chatHistory.push({
             role: "model",
             parts: [{ text: apiResponseText }]
@@ -535,7 +581,7 @@ const handleOutgoingMessage = (e) => {
     const messageContent = `<div class="message-text"></div>
                             ${userData.file.data ? `<img src="data:${userData.file.mime_type};base64,${userData.file.data}" class="attachment" />` : ""}`;
     const outgoingMessageDiv = createMessageElement(messageContent, "user-message");
-    outgoingMessageDiv.querySelector(".message-text").innerText = userData.message;
+    outgoingMessageDiv.querySelector(".message-text").innerHTML = `${userData.message}<span class="message-time">${formatTime()}</span>`;
     chatBody.appendChild(outgoingMessageDiv);
     chatBody.scrollTop = chatBody.scrollHeight;
     setTimeout(() => {

@@ -112,6 +112,15 @@ body {
     background-color: var(--body-color);
     color: var(--text-color);
     transition: font-family 0.3s ease;
+    display: block;
+    /* chặn select cho các trình duyệt */
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    unselectable: on;
 }
 
 a {
@@ -1212,6 +1221,14 @@ img {
     box-shadow: 1px 1px 10px 2px var(--box-shadow);
 }
 
+/* [class$="__title"] span:last-of-type {
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-left: 4px;
+} */
+
 .about__box .icon img {
     width: 50px;
     margin-bottom: 20px;
@@ -1557,6 +1574,73 @@ body.show-chatbot .chatbot-popup {
     max-width: 75%;
     font-size: var(--small-font-size);
     color: hsl(var(--hue), 24%, 12%);
+}
+
+.chat-body .message-text p {
+    margin: 0;
+    line-height: 1.5em;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+.chat-body .message-text pre {
+    background: hsl(var(--hue), 100%, 99%);
+    padding: 1em;
+    border-radius: 5px;
+    overflow-x: auto;
+}
+
+.chat-body .message-text code {
+    background: hsl(var(--hue), 100%, 99%);
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-family: monospace;
+}
+
+.chat-body .message-text h1,
+.chat-body .message-text h2,
+.chat-body .message-text h3,
+.chat-body .message-text h4,
+.chat-body .message-text h5,
+.chat-body .message-text h6 {
+    margin: 0.5em 0;
+    font-weight: bold;
+}
+
+.chat-body .message-text ul,
+.chat-body .message-text ol {
+    padding-left: 1.5em;
+    margin: 0.5em 0;
+}
+
+.chat-body .message-text a {
+    color: #4e6ef2;
+    text-decoration: underline;
+}
+
+.chat-body .message-text blockquote {
+    border-left: 3px solid #ddd;
+    padding-left: 1em;
+    margin: 0.5em 0;
+    color: #666;
+}
+
+.chat-body .message .message-time {
+    display: block;
+    font-size: 0.65rem;
+    margin-top: 3px;
+    margin-bottom: -6px;
+    opacity: 0.7;
+    color: hsl(var(--hue), 12%, 40%);
+}
+
+.bot-message .message-time {
+    text-align: left;
+}
+
+.user-message .message-time {
+    text-align: right;
 }
 
 .chat-body .bot-message.thinking .message-text {

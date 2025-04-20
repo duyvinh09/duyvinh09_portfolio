@@ -222,11 +222,16 @@ document.addEventListener('DOMContentLoaded', () => {
         distance: '60px',
         duration: 2000,
         delay: 200,
+        opacity: 0,
+        easing: 'cubic-bezier(0.5, 0, 0, 1)',
         reset: true,
+        mobile: true,
     });
     sr.reveal(`.profile__border, .profile__name`);
-    sr.reveal(`.profile__social, .profile_profession, .profile__info-group, .profile__buttons, .projects__card, 
-    .skills__area, .resume__area, .note`, { origin: 'bottom' });
+    sr.reveal(`.profile__social, .profile_profession, .profile__info-group, .profile__buttons, .projects__card, .skills__area, .resume__area`, { origin: 'bottom' });
+    sr.reveal(`.note`, { origin: 'left' });
+    sr.reveal(`.resume__step__time`, { origin: 'right' });
+    sr.reveal(`.about__box .icon img`, { origin: 'bottom', scale: 0.9, rotate: { z: 45 }, reset: false });
 
 
     // Typed.js for typing animation in header
@@ -476,7 +481,7 @@ const createMessageElement = (content, ...classes) => {
     div.innerHTML = content;
     return div;
 };
-const notificationSound = new Audio('./assets/sounds/notification_sound_effect.mp3');
+const notificationSound = new Audio('./assets/sounds/notification-sound-effect.mp3');
 notificationSound.volume = 1.0;
 function markdownToHTML(text) {
     if (!text) return '';
@@ -517,6 +522,12 @@ function markdownToHTML(text) {
         });
     return html;
 }
+function escapeHTML(str) {
+    return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
 function formatTime(date = new Date()) {
     const hours = date.getHours().toString().padStart(2, '0');
     const minutes = date.getMinutes().toString().padStart(2, '0');
@@ -543,7 +554,12 @@ const generateBotResponse = async (incomingMessageDiv) => {
         if (!response.ok) throw new Error(data.error.message);
         let apiResponseText = data.candidates[0].content.parts[0].text;
         apiResponseText = apiResponseText.replace(/\n+$/, '');
-        const htmlResponse = markdownToHTML(apiResponseText);
+        let htmlResponse = '';
+        if (/<[a-z][\s\S]*>/i.test(apiResponseText)) {
+            htmlResponse = markdownToHTML(escapeHTML(apiResponseText));
+        } else {
+            htmlResponse = markdownToHTML(apiResponseText);
+        }
         notificationSound.currentTime = 0;
         notificationSound.play().catch(() => {});
         messageElement.innerHTML = `${htmlResponse}<span class="message-time">${formatTime()}</span>`;

@@ -8,6 +8,7 @@ window.addEventListener("load", () => {
 });
 
 function initAnimations() {
+
     // 1. Counter animation (Count Up)
     function countUp(element, duration = 2000) {
         const target = parseInt(element.textContent);
@@ -26,6 +27,7 @@ function initAnimations() {
         };
         updateCounter();
     }
+
     function initCountUp(containerSelector, numberSelector = '.counter') {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -75,6 +77,7 @@ checkScrollPosition();
 window.addEventListener("scroll", handleScroll);
 menuHideBtn.addEventListener('click', hideMenuManual);
 menuShowBtn.addEventListener('click', showMenuManual);
+
 bottomMenu.addEventListener('mouseenter', () => {
     isHoveringMenu = true;
     clearTimeout(menuTimeout);
@@ -82,22 +85,26 @@ bottomMenu.addEventListener('mouseenter', () => {
         menuHideBtn.classList.add('show');
     }
 });
+
 bottomMenu.addEventListener('mouseleave', () => {
     isHoveringMenu = false;
     if (window.scrollY > 10 && !menuHideBtn.matches(':hover')) {
         menuTimeout = setTimeout(hideMenuAuto, 2500);
     }
 });
+
 menuHideBtn.addEventListener('mouseenter', () => {
     isHoveringMenu = true;
     clearTimeout(menuTimeout);
 });
+
 menuHideBtn.addEventListener('mouseleave', () => {
     isHoveringMenu = false;
     if (window.scrollY > 10) {
         menuTimeout = setTimeout(hideMenuAuto, 2500);
     }
 });
+
 function checkScrollPosition() {
     if (window.scrollY < 10) {
         menuHideBtn.classList.remove('show');
@@ -105,6 +112,7 @@ function checkScrollPosition() {
         menuHideBtn.classList.add('show');
     }
 }
+
 function handleScroll() {
     showMenu();
     if (!isHoveringMenu) {
@@ -112,6 +120,7 @@ function handleScroll() {
         menuTimeout = setTimeout(hideMenuAuto, 2500);
     }
 }
+
 function showMenu() {
     bottomMenu.classList.remove('hide');
     if (window.scrollY > 10) {
@@ -120,6 +129,7 @@ function showMenu() {
     menuShowBtn.classList.remove('active');
     checkScrollPosition();
 }
+
 function hideMenuAuto() {
     if (window.scrollY > 10 && !isHoveringMenu) {
         bottomMenu.classList.add('hide');
@@ -127,12 +137,14 @@ function hideMenuAuto() {
         menuShowBtn.classList.add('active');
     }
 }
+
 function hideMenuManual() {
     bottomMenu.classList.add('hide');
     menuHideBtn.classList.remove('show');
     menuShowBtn.classList.add('active');
     isHoveringMenu = false;
 }
+
 function showMenuManual() {
     bottomMenu.classList.remove('hide');
     menuShowBtn.classList.remove('active');
@@ -144,6 +156,7 @@ function showMenuManual() {
         menuTimeout = setTimeout(hideMenuAuto, 2500);
     }
 }
+
 const sections = document.querySelectorAll("section[id]");
 window.addEventListener("scroll", () => {
     let scrollY = window.pageYOffset;
@@ -167,6 +180,7 @@ const switchOnSound = new Audio('./assets/sounds/switch-on.mp3');
 const switchOffSound = new Audio('./assets/sounds/switch-off.mp3');
 switchOnSound.volume = 1.0;
 switchOffSound.volume = 1.0;
+
 const toggleMode = (isDark, skipSound = false) => {
     const wasDark = body.classList.contains("dark");
     body.classList.toggle("dark", isDark);
@@ -179,14 +193,17 @@ const toggleMode = (isDark, skipSound = false) => {
         sound.play().catch(() => {});
     }
 };
+
 if (savedMode === "dark-mode") {
     toggleMode(true, true);
 } else {
     themeToggle.checked = false;
 }
+
 modeToggle.addEventListener("click", () => {
     toggleMode(!body.classList.contains("dark"));
 });
+
 themeToggle.addEventListener("change", function() {
     toggleMode(this.checked);
 });
@@ -255,6 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const duration = 800;
         const intervalTime = 30;
         const totalIterations = Math.ceil(duration / intervalTime);
+
         const interval = setInterval(() => {
             element.textContent = originalText
                 .split('')
@@ -279,6 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentLanguage = localStorage.getItem('language') || 'en';
     const languageSound = new Audio('./assets/sounds/language.mp3');
     languageSound.volume = 1.0;
+
     elementsToTranslate.forEach(element => {
         if (!element.dataset.original) {
             if ((element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') && element.hasAttribute('placeholder')) {
@@ -287,6 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 element.dataset.original = element.innerHTML;
             }
         }
+
         if (element.classList.contains('profile_profession')) {
             element.dataset.decrypt = 'true';
             element.addEventListener('mouseenter', function() {
@@ -298,10 +318,12 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     });
+
     function applyLanguage(lang, skipSound = false) {
         document.body.classList.remove('language-en', 'language-vi');
         document.body.classList.add(`language-${lang}`);
         elementsToTranslate.forEach(element => {
+
             if ((element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') && element.hasAttribute('placeholder')) {
                 if (lang === 'vi') {
                     element.placeholder = element.getAttribute('data-vi');
@@ -310,6 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 return;
             }
+
             if (lang === 'vi') {
                 const viText = element.getAttribute('data-vi');
                 const tempDiv = document.createElement('div');
@@ -343,6 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 applyDecryptEffect(element);
             }
         });
+
         languageBtn.classList.toggle('vi', lang === 'vi');
         localStorage.setItem('language', lang);
         currentLanguage = lang;
@@ -351,10 +375,12 @@ document.addEventListener('DOMContentLoaded', () => {
             languageSound.play().catch(() => {});
         }
     }
+
     languageBtn.addEventListener('click', () => {
         const newLanguage = currentLanguage === 'en' ? 'vi' : 'en';
         applyLanguage(newLanguage);
     });
+
     applyLanguage(currentLanguage, true);
     document.querySelectorAll('[data-decrypt="true"]').forEach(el => {
         applyDecryptEffect(el);
@@ -423,6 +449,7 @@ document.getElementById('contact-form').addEventListener('submit', function(even
     submitButton.disabled = true;
     submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> SENDING...';
     emailjs.sendForm('service_swfnmkm', 'template_n0r8ice', this)
+
     .then(function(response) {
         Swal.fire({
             icon: 'success',
@@ -461,6 +488,7 @@ const closeChatbot = document.querySelector("#close-chatbot");
 const scrollToBottomBtn = document.querySelector("#scroll-to-bottom");
 const API_KEY = "AIzaSyAmudee2bOPCIa2YbY4FO82GHnwmMGFiyQ";
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+
 const userData = {
     message: null,
     file: {
@@ -468,19 +496,24 @@ const userData = {
         mime_type: null
     }
 };
+
 let isAutoScrolling = false;
 let isScrollingToBottomRequested = false;
 let isBotResponding = false;
+
 function updateSendButtonState() {
     const isValidMessage = messageInput.value.trim().length > 0;
     sendMessageButton.style.display = isValidMessage && !isBotResponding ? "block" : "none";
     sendMessageButton.disabled = isBotResponding;
 }
+
 chatBody.addEventListener("scroll", () => {
+
     if (isScrollingToBottomRequested) {
         scrollToBottomBtn.classList.remove("show");
         return;
     }
+
     if (!isAutoScrolling) {
         const isScrolledToBottom = chatBody.scrollHeight - chatBody.scrollTop <= chatBody.clientHeight + 100;
         if (!isScrolledToBottom) {
@@ -490,14 +523,17 @@ chatBody.addEventListener("scroll", () => {
         }
     }
 });
+
 scrollToBottomBtn.addEventListener("click", () => {
     scrollToBottomBtn.classList.remove("show");
     isAutoScrolling = true;
     isScrollingToBottomRequested = true;
+
     chatBody.scrollTo({ 
         top: chatBody.scrollHeight, 
         behavior: "smooth" 
     });
+
     setTimeout(() => {
         isAutoScrolling = false;
         setTimeout(() => {
@@ -505,6 +541,7 @@ scrollToBottomBtn.addEventListener("click", () => {
         }, 100);
     }, 500);
 });
+
 const chatHistory = [
     {
         role: "model",
@@ -516,16 +553,20 @@ Không chỉ dừng lại ở lý thuyết, Vinh đã hiện thực hóa kỹ n�
 Với tinh thần sáng tạo không ngừng và niềm đam mê lan tỏa, Đinh Duy Vinh không chỉ phát triển kỹ năng cá nhân mà còn không ngại chia sẻ, hỗ trợ cộng đồng công nghệ Việt Nam. Mỗi dự án của anh là minh chứng cho khả năng giải quyết vấn đề và khát khao đóng góp – định hướng đưa Vinh trở thành một nguồn cảm hứng cho thế hệ trẻ đam mê lập trình và công nghệ.` }],
     },
 ];
+
 // const chatHistory = [];
 const initialInputHeight = messageInput.scrollHeight;
+
 const createMessageElement = (content, ...classes) => {
     const div = document.createElement("div");
     div.classList.add("message", ...classes);
     div.innerHTML = content;
     return div;
 };
+
 const notificationSound = new Audio('./assets/sounds/notification-sound-effect.mp3');
 notificationSound.volume = 1.0;
+
 function markdownToHTML(text) {
     if (!text) return '';
     let html = text
@@ -565,25 +606,30 @@ function markdownToHTML(text) {
         });
     return html;
 }
+
 function escapeHTML(str) {
     return str
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
 }
+
 function formatTime(date = new Date()) {
     const hours = date.getHours().toString().padStart(2, '0');
     const minutes = date.getMinutes().toString().padStart(2, '0');
     return `${hours}:${minutes}`;
 }
+
 const generateBotResponse = async (incomingMessageDiv) => {
     isBotResponding = true;
     updateSendButtonState();
     const messageElement = incomingMessageDiv.querySelector(".message-text");
+
     chatHistory.push({
         role: "user",
         parts: [{ text: userData.message }, ...(userData.file.data ? [{ inline_data: userData.file }] : [])],
     });
+
     const requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -591,6 +637,7 @@ const generateBotResponse = async (incomingMessageDiv) => {
             contents: chatHistory
         })
     }
+
     try {
         const response = await fetch(API_URL, requestOptions);
         const data = await response.json();
@@ -598,14 +645,17 @@ const generateBotResponse = async (incomingMessageDiv) => {
         let apiResponseText = data.candidates[0].content.parts[0].text;
         apiResponseText = apiResponseText.replace(/\n+$/, '');
         let htmlResponse = '';
+
         if (/<[a-z][\s\S]*>/i.test(apiResponseText)) {
             htmlResponse = markdownToHTML(escapeHTML(apiResponseText));
         } else {
             htmlResponse = markdownToHTML(apiResponseText);
         }
+
         notificationSound.currentTime = 0;
         notificationSound.play().catch(() => {});
         messageElement.innerHTML = `${htmlResponse}<span class="message-time">${formatTime()}</span>`;
+        
         chatHistory.push({
             role: "model",
             parts: [{ text: apiResponseText }]
@@ -622,6 +672,7 @@ const generateBotResponse = async (incomingMessageDiv) => {
         isScrollingToBottomRequested = true;
         scrollToBottomBtn.classList.remove("show");
         chatBody.scrollTo({ behavior: "smooth", top: chatBody.scrollHeight });
+        
         setTimeout(() => {
             isAutoScrolling = false;
             setTimeout(() => {
@@ -630,6 +681,7 @@ const generateBotResponse = async (incomingMessageDiv) => {
         }, 500);
     }
 };
+
 const handleOutgoingMessage = (e) => {
     e.preventDefault();
     if (isBotResponding) return;
@@ -643,6 +695,7 @@ const handleOutgoingMessage = (e) => {
     outgoingMessageDiv.querySelector(".message-text").innerHTML = `${userData.message}<span class="message-time">${formatTime()}</span>`;
     chatBody.appendChild(outgoingMessageDiv);
     chatBody.scrollTop = chatBody.scrollHeight;
+
     setTimeout(() => {
         const messageContent = `<svg class="bot-avatar" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 1024 1024">
                     <path d="M738.3 287.6H285.7c-59 0-106.8 47.8-106.8 106.8v303.1c0 59 47.8 106.8 106.8 106.8h81.5v111.1c0 .7.8 1.1 1.4.7l166.9-110.6 41.8-.8h117.4l43.6-.4c59 0 106.8-47.8 106.8-106.8V394.5c0-59-47.8-106.9-106.8-106.9zM351.7 448.2c0-29.5 23.9-53.5 53.5-53.5s53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5-53.5-23.9-53.5-53.5zm157.9 267.1c-67.8 0-123.8-47.5-132.3-109h264.6c-8.6 61.5-64.5 109-132.3 109zm110-213.7c-29.5 0-53.5-23.9-53.5-53.5s23.9-53.5 53.5-53.5 53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5zM867.2 644.5V453.1h26.5c19.4 0 35.1 15.7 35.1 35.1v121.1c0 19.4-15.7 35.1-35.1 35.1h-26.5zM95.2 609.4V488.2c0-19.4 15.7-35.1 35.1-35.1h26.5v191.3h-26.5c-19.4 0-35.1-15.7-35.1-35.1zM561.5 149.6c0 23.4-15.6 43.3-36.9 49.7v44.9h-30v-44.9c-21.4-6.5-36.9-26.3-36.9-49.7 0-28.6 23.3-51.9 51.9-51.9s51.9 23.3 51.9 51.9z"></path>
@@ -661,6 +714,7 @@ const handleOutgoingMessage = (e) => {
         isScrollingToBottomRequested = true;
         scrollToBottomBtn.classList.remove("show");
         chatBody.scrollTo({ behavior: "smooth", top: chatBody.scrollHeight });
+        
         setTimeout(() => {
             isAutoScrolling = false;
             isScrollingToBottomRequested = false;
@@ -668,18 +722,21 @@ const handleOutgoingMessage = (e) => {
         generateBotResponse(incomingMessageDiv);
     }, 600);
 };
+
 messageInput.addEventListener("keydown", (e) => {
     const userMessage = e.target.value.trim();
     if (e.key === "Enter" && userMessage && !e.shiftKey && window.innerWidth > 768 && !isBotResponding) {
         handleOutgoingMessage(e);
     }
 });
+
 messageInput.addEventListener("input", (e) => {
     messageInput.style.height = `${initialInputHeight}px`;
     messageInput.style.height = `${messageInput.scrollHeight}px`;
     document.querySelector(".chat-form").style.borderRadius = messageInput.scrollHeight > initialInputHeight ? "15px" : "32px";
     updateSendButtonState();
 });
+
 fileInput.addEventListener("change", (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -696,12 +753,14 @@ fileInput.addEventListener("change", (e) => {
     };
     reader.readAsDataURL(file);
 });
+
 fileCancelButton.addEventListener("click", (e) => {
     userData.file = {};
     fileUploadWrapper.classList.remove("file-uploaded");
 });
+
 const picker = new EmojiMart.Picker({
-    theme: "light",
+    theme: "auto",
     showSkinTones: "none",
     previewPosition: "none",
     onEmojiSelect: (emoji) => {
@@ -718,11 +777,13 @@ const picker = new EmojiMart.Picker({
         }
     },
 });
+
 document.querySelector(".chat-form").appendChild(picker);
 fileInput.addEventListener("change", async (e) => {
     const file = e.target.files[0];
     if (!file) return;
     const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    
     if (!validImageTypes.includes(file.type)) {
         await Swal.fire({
             icon: 'error',
@@ -733,6 +794,7 @@ fileInput.addEventListener("change", async (e) => {
         resetFileInput();
         return;
     }
+
     const reader = new FileReader();
     reader.onload = (e) => {
         fileUploadWrapper.querySelector("img").src = e.target.result;
@@ -745,6 +807,7 @@ fileInput.addEventListener("change", async (e) => {
     };
     reader.readAsDataURL(file);
 });
+
 function resetFileInput() {
     fileInput.value = "";
     fileUploadWrapper.classList.remove("file-uploaded");
@@ -752,11 +815,13 @@ function resetFileInput() {
     userData.file = { data: null, mime_type: null };
     document.querySelector(".chat-form").reset();
 }
+
 sendMessageButton.addEventListener("click", (e) => {
     if (!isBotResponding) {
         handleOutgoingMessage(e);
     }
 });
+
 document.querySelector("#file-upload").addEventListener("click", (e) => fileInput.click());
 chatbotToggler.addEventListener("click", () => document.body.classList.toggle("show-chatbot"));
 closeChatbot.addEventListener("click", () => document.body.classList.remove("show-chatbot"));

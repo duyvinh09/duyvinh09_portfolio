@@ -265,30 +265,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // Animation Decrypted Text
-    function applyDecryptEffect(element) {
-        const originalText = element.textContent;
-        const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()_+";
-        let iteration = 0;
-        const duration = 800;
-        const intervalTime = 30;
-        const totalIterations = Math.ceil(duration / intervalTime);
+    // function applyDecryptEffect(element) {
+    //     const originalText = element.textContent;
+    //     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()_+";
+    //     let iteration = 0;
+    //     const duration = 800;
+    //     const intervalTime = 30;
+    //     const totalIterations = Math.ceil(duration / intervalTime);
 
-        const interval = setInterval(() => {
-            element.textContent = originalText
-                .split('')
-                .map((char, index) => {
-                    if (char === ' ') return ' ';
-                    if (index < iteration) return char;
-                    return characters[Math.floor(Math.random() * characters.length)];
-                })
-                .join('');
-            iteration++;
-            if (iteration > originalText.length) {
-                clearInterval(interval);
-                element.textContent = originalText;
-            }
-        }, intervalTime);
-    }
+    //     const interval = setInterval(() => {
+    //         element.textContent = originalText
+    //             .split('')
+    //             .map((char, index) => {
+    //                 if (char === ' ') return ' ';
+    //                 if (index < iteration) return char;
+    //                 return characters[Math.floor(Math.random() * characters.length)];
+    //             })
+    //             .join('');
+    //         iteration++;
+    //         if (iteration > originalText.length) {
+    //             clearInterval(interval);
+    //             element.textContent = originalText;
+    //         }
+    //     }, intervalTime);
+    // }
 
 
     // Language switching functionality
@@ -307,16 +307,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        if (element.classList.contains('profile_profession')) {
-            element.dataset.decrypt = 'true';
-            element.addEventListener('mouseenter', function() {
-                if (!this.isDecrypting) {
-                    this.isDecrypting = true;
-                    applyDecryptEffect(this);
-                    setTimeout(() => { this.isDecrypting = false; }, 1000);
-                }
-            });
-        }
+        // if (element.classList.contains('profile_profession')) {
+        //     element.dataset.decrypt = 'true';
+        //     element.addEventListener('mouseenter', function() {
+        //         if (!this.isDecrypting) {
+        //             this.isDecrypting = true;
+        //             applyDecryptEffect(this);
+        //             setTimeout(() => { this.isDecrypting = false; }, 1000);
+        //         }
+        //     });
+        // }
     });
 
     function applyLanguage(lang, skipSound = false) {
@@ -362,9 +362,9 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 element.innerHTML = element.dataset.original;
             }
-            if (element.dataset.decrypt === 'true') {
-                applyDecryptEffect(element);
-            }
+            // if (element.dataset.decrypt === 'true') {
+            //     applyDecryptEffect(element);
+            // }
         });
 
         languageBtn.classList.toggle('vi', lang === 'vi');
@@ -382,9 +382,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     applyLanguage(currentLanguage, true);
-    document.querySelectorAll('[data-decrypt="true"]').forEach(el => {
-        applyDecryptEffect(el);
-    });
+    // document.querySelectorAll('[data-decrypt="true"]').forEach(el => {
+    //     applyDecryptEffect(el);
+    // });
 
 
     // Star animation

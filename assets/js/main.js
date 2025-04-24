@@ -223,6 +223,12 @@ window.addEventListener('scroll', function() {
 
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Year display
+    const yearSpan = document.getElementById("year");
+    if (yearSpan) {
+        yearSpan.textContent = new Date().getFullYear();
+    }
+
 
     // Custom cursor
     const elements = document.querySelectorAll('*');

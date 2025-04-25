@@ -272,12 +272,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Random Color for .projects__tag
     const colorClasses = [
-        'projects__tag--blue',
-        'projects__tag--green',
-        'projects__tag--yellow',
-        'projects__tag--purple',
-        'projects__tag--gray',
-        'projects__tag--red'
+        'projects__tag--blue', 'projects__tag--green', 'projects__tag--yellow',
+        'projects__tag--purple', 'projects__tag--gray', 'projects__tag--red'
     ];
     document.querySelectorAll('.projects__tags').forEach(container => {
         const tags = container.querySelectorAll('.projects__tag');

@@ -367,6 +367,47 @@ document.addEventListener('DOMContentLoaded', () => {
     applyLanguage(currentLanguage, true);
 
 
+    // Functionality for the carousel
+    const carouselItems = document.querySelectorAll('.carousel__item');
+    const popupOverlay = document.querySelector('.popup__overlay');
+    const popupImage = document.querySelector('.popup__image');
+    const popupTitle = document.querySelector('.popup__info .popup__title');
+    const popupTime = document.querySelector('.popup__info .popup__time');
+    const popupCaption = document.querySelector('.popup__info .popup__caption');
+    const popupClose = document.querySelector('.popup__close');
+    carouselItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const imgElement = this.querySelector('img');
+            const titleElement = this.querySelector('.popup__title');
+            const timeElement = this.querySelector('.popup__time');
+            const captionElement = this.querySelector('.popup__caption');
+            popupImage.src = imgElement.src;
+            popupImage.alt = imgElement.alt;
+            popupTitle.textContent = titleElement.textContent;
+            popupTime.textContent = timeElement.textContent;
+            popupCaption.textContent = captionElement.textContent;
+            popupOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+    });
+    popupClose.addEventListener('click', function() {
+        popupOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    });
+    popupOverlay.addEventListener('click', function(e) {
+        if (e.target === popupOverlay) {
+            popupOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && popupOverlay.classList.contains('active')) {
+            popupOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+
+
     // Star animation
     // function initStarAnimation() {
     //     const starsContainer = document.querySelector(".stars-container");
@@ -451,53 +492,6 @@ document.getElementById('contact-form').addEventListener('submit', function(even
     .finally(() => {
         submitButton.disabled = false;
         submitButton.innerHTML = originalButtonText;
-    });
-});
-
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    const carouselItems = document.querySelectorAll('.carousel__item');
-    const popupOverlay = document.querySelector('.popup__overlay');
-    const popupImage = document.querySelector('.popup__image');
-    const popupTitle = document.querySelector('.popup__info .popup__title');
-    const popupTime = document.querySelector('.popup__info .popup__time');
-    const popupCaption = document.querySelector('.popup__info .popup__caption');
-    const popupClose = document.querySelector('.popup__close');
-
-    carouselItems.forEach(item => {
-        item.addEventListener('click', function() {
-            const imgElement = this.querySelector('img');
-            const titleElement = this.querySelector('.popup__title');
-            const timeElement = this.querySelector('.popup__time');
-            const captionElement = this.querySelector('.popup__caption');
-            popupImage.src = imgElement.src;
-            popupImage.alt = imgElement.alt;
-            popupTitle.textContent = titleElement.textContent;
-            popupTime.textContent = timeElement.textContent;
-            popupCaption.textContent = captionElement.textContent;
-            popupOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-    });
-
-    popupClose.addEventListener('click', function() {
-        popupOverlay.classList.remove('active');
-        document.body.style.overflow = '';
-    });
-
-    popupOverlay.addEventListener('click', function(e) {
-        if (e.target === popupOverlay) {
-            popupOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-    });
-
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && popupOverlay.classList.contains('active')) {
-            popupOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-        }
     });
 });
 

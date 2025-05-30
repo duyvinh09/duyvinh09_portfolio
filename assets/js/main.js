@@ -461,38 +461,52 @@ document.addEventListener('DOMContentLoaded', () => {
 // Initialize EmailJS with contact form
 document.getElementById('contact-form').addEventListener('submit', function(event) {
     event.preventDefault();
+
+    const recaptchaResponse = grecaptcha.getResponse();
+    if (!recaptchaResponse) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Vui lòng xác minh!',
+            text: 'Bạn cần xác minh reCAPTCHA trước khi gửi.',
+            confirmButtonText: 'OK'
+        });
+        return;
+    }
+
     const now = new Date();
     const timeString = now.toLocaleString('vi-VN').replace(',', '');
     document.getElementById('time').value = timeString;
     document.getElementById('page-url').value = window.location.hostname;
+
     const submitButton = this.querySelector('button[type="submit"]');
     const originalButtonText = submitButton.innerHTML;
     submitButton.disabled = true;
-    submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> SENDING...';
-    emailjs.sendForm('service_swfnmkm', 'template_n0r8ice', this)
+    submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ĐANG GỬI...';
 
-    .then(function(response) {
-        Swal.fire({
-            icon: 'success',
-            title: 'Thành công!',
-            text: 'Tin nhắn đã được gửi thành công!',
-            showConfirmButton: false,
-            timer: 1500
+    emailjs.sendForm('service_swfnmkm', 'template_n0r8ice', this)
+        .then(function(response) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công!',
+                text: 'Tin nhắn đã được gửi thành công!',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            document.getElementById('contact-form').reset();
+            grecaptcha.reset(); // reset reCAPTCHA sau khi gửi
+        })
+        .catch(function(error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Không gửi được tin nhắn. Vui lòng thử lại.',
+                confirmButtonText: 'OK'
+            });
+        })
+        .finally(() => {
+            submitButton.disabled = false;
+            submitButton.innerHTML = originalButtonText;
         });
-        document.getElementById('contact-form').reset();
-    })
-    .catch(function(error) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Lỗi!',
-            text: 'Không gửi được tin nhắn. Vui lòng thử lại.',
-            confirmButtonText: 'OK'
-        });
-    })
-    .finally(() => {
-        submitButton.disabled = false;
-        submitButton.innerHTML = originalButtonText;
-    });
 });
 
 

@@ -4,7 +4,7 @@ window.addEventListener("load", () => {
     document.getElementById("loader").classList.add("hide");
     document.getElementById("home").style.display = "block";
     initAnimations();
-  }, 500);
+  }, 300);
 });
 
 function initAnimations() {

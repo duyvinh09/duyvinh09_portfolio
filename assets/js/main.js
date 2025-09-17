@@ -1,10 +1,67 @@
 // Preloader
-window.addEventListener("load", () => {
-  setTimeout(() => {
-    document.getElementById("loader").classList.add("hide");
-    document.getElementById("home").style.display = "block";
-    initAnimations();
-  }, 300);
+function progressBar() {
+  $('.progress').each(function() {
+    var ctrl = new ScrollMagic.Controller();
+    new ScrollMagic.Scene({
+        triggerElement: '.progress',
+        triggerHook: 'onEnter',
+        duration: 300
+    })
+    .addTo(ctrl)
+    .on("enter", function () {
+      var progressBar = $('.progress-bar');
+      progressBar.each(function() {
+        $(this).css({'width': $(this).attr('aria-valuenow') + '%', 'z-index': '2'});
+      });
+    });
+  });
+}
+
+// Preloader animation
+function preloader() {
+  var tl = anime.timeline({});
+  tl
+    .add({
+      targets: '.loader',
+      duration: 300,
+      opacity: 1,
+      easing: 'easeInOutQuart'
+    })
+    .add({
+      targets: '.preloader__progress span',
+      duration: 500,
+      width: '100%',
+      easing: 'easeInOutQuart'
+    }, '-=200')
+    .add({
+      targets: '.preloader',
+      duration: 500,
+      opacity: 0,
+      zIndex: -1,
+      easing: 'easeInOutQuart',
+      complete: function() {
+        document.getElementById("loader").classList.add("hide");
+        document.getElementById("home").style.display = "block";
+        if (typeof initAnimations === "function") {
+          initAnimations();
+        }
+      }
+    });
+}
+
+// Khi toàn bộ ảnh trong body load xong
+$('body, .js-img-load').imagesLoaded({ background: true }).always(function() {
+  preloader();
+});
+
+// Khi body load, khởi tạo progressBar
+anime({
+  targets: 'body',
+  opacity: 1,
+  delay: 400,
+  complete: function() {
+    progressBar();
+  }
 });
 
 function initAnimations() {

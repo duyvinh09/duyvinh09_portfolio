@@ -109,6 +109,10 @@ body.dark {
     margin: 0;
 }
 
+html {
+    -webkit-overflow-scrolling: touch;
+}
+
 body {
     font-family: "Poppins", sans-serif;
     font-size: var(--normal-font-size);
@@ -155,6 +159,14 @@ h3 {
 .grid {
     display: grid;
     gap: 1.5rem;
+}
+
+body.no-scroll {
+    overflow: hidden;
+}
+
+body.no-scroll::-webkit-scrollbar {
+    display: none;
 }
 
 /* Preloader container */

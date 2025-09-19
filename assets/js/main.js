@@ -50,9 +50,7 @@ $(document).ready(function() {
       });
   }
 
-  $('body, .js-img-load').imagesLoaded({ background: true }).always(function() {
-    preloader();
-  });
+  preloader();
 
   anime({
     targets: 'body',

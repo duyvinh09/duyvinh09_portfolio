@@ -643,6 +643,7 @@ img {
     justify-content: center;
     column-gap: 0.75rem;
     padding: 0 !important;
+    list-style: none;
 }
 
 .profile__social_link {
@@ -1371,7 +1372,7 @@ img {
     margin-bottom: 20px;
 }
 
-.about__box h5 {
+.about__box h3 {
     font-size: 1rem;
     margin-bottom: 0.75rem;
     color: var(--container-color);
@@ -2527,7 +2528,7 @@ body.show-emoji-picker em-emoji-picker {
   /* background-color: var(--first-color); */
 }
 
-.footer__copy h5 {
+.footer__copy p {
     margin-bottom: 0.75rem;
   /* color: var(--title-color); */
     font-weight: 200;

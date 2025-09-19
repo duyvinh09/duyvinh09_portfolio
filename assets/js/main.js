@@ -1,4 +1,6 @@
 $(document).ready(function() {
+  'use strict';
+  
   // Preloader
   function progressBar() {
     $('.progress').each(function() {

@@ -1,66 +1,71 @@
-$(document).ready(function() {
-  'use strict';
-  
+$(document).ready(function () {
+  "use strict";
+
   // Preloader
   function progressBar() {
-    $('.progress').each(function() {
+    $(".progress").each(function () {
       var ctrl = new ScrollMagic.Controller();
       new ScrollMagic.Scene({
-          triggerElement: '.progress',
-          triggerHook: 'onEnter',
-          duration: 300
+        triggerElement: ".progress",
+        triggerHook: "onEnter",
+        duration: 300,
       })
-      .addTo(ctrl)
-      .on("enter", function () {
-        var progressBar = $('.progress-bar');
-        progressBar.each(function() {
-          $(this).css({'width': $(this).attr('aria-valuenow') + '%', 'z-index': '2'});
+        .addTo(ctrl)
+        .on("enter", function () {
+          var progressBar = $(".progress-bar");
+          progressBar.each(function () {
+            $(this).css({
+              width: $(this).attr("aria-valuenow") + "%",
+              "z-index": "2",
+            });
+          });
         });
-      });
     });
   }
 
   // Preloader animation
   function preloader() {
     var tl = anime.timeline({});
-    tl
+    tl.add({
+      targets: ".loader",
+      duration: 300,
+      opacity: 1,
+      easing: "easeInOutQuart",
+    })
+      .add(
+        {
+          targets: ".preloader__progress span",
+          duration: 500,
+          width: "100%",
+          easing: "easeInOutQuart",
+        },
+        "-=200"
+      )
       .add({
-        targets: '.loader',
-        duration: 300,
-        opacity: 1,
-        easing: 'easeInOutQuart'
-      })
-      .add({
-        targets: '.preloader__progress span',
-        duration: 500,
-        width: '100%',
-        easing: 'easeInOutQuart'
-      }, '-=200')
-      .add({
-        targets: '.preloader',
+        targets: ".preloader",
         duration: 500,
         opacity: 0,
         zIndex: -1,
-        easing: 'easeInOutQuart',
-        complete: function() {
+        easing: "easeInOutQuart",
+        complete: function () {
           document.getElementById("loader").classList.add("hide");
           document.getElementById("home").style.display = "block";
           if (typeof initAnimations === "function") {
             initAnimations();
           }
-        }
+        },
       });
   }
 
   preloader();
 
   anime({
-    targets: 'body',
+    targets: "body",
     opacity: 1,
     delay: 400,
-    complete: function() {
+    complete: function () {
       progressBar();
-    }
+    },
   });
 
   function initAnimations() {
@@ -110,7 +115,8 @@ $(document).ready(function() {
         (entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
-              const progressBars = entry.target.querySelectorAll(".progress-bar");
+              const progressBars =
+                entry.target.querySelectorAll(".progress-bar");
               progressBars.forEach((progressBar) => {
                 progressBar.style.animation =
                   "progressAnimation 3s ease-in-out forwards";
@@ -719,7 +725,7 @@ $(document).ready(function() {
   const closeChatbot = document.querySelector("#close-chatbot");
   const scrollToBottomBtn = document.querySelector("#scroll-to-bottom");
   const API_KEY = "AIzaSyAmudee2bOPCIa2YbY4FO82GHnwmMGFiyQ";
-  const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+  const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
 
   const userData = {
     message: null,
@@ -748,7 +754,8 @@ $(document).ready(function() {
 
     if (!isAutoScrolling) {
       const isScrolledToBottom =
-        chatBody.scrollHeight - chatBody.scrollTop <= chatBody.clientHeight + 100;
+        chatBody.scrollHeight - chatBody.scrollTop <=
+        chatBody.clientHeight + 100;
       if (!isScrolledToBottom) {
         scrollToBottomBtn.classList.add("show");
       } else {
@@ -912,7 +919,10 @@ $(document).ready(function() {
   }
 
   function escapeHTML(str) {
-    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
   }
 
   function formatTime(date = new Date()) {

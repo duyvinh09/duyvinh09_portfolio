@@ -1,68 +1,39 @@
-$(document).ready(function () {
-  "use strict";
+document.addEventListener("DOMContentLoaded", () => {
 
   // Preloader
   function progressBar() {
     $(".progress").each(function () {
       var ctrl = new ScrollMagic.Controller();
-      new ScrollMagic.Scene({
-        triggerElement: ".progress",
-        triggerHook: "onEnter",
-        duration: 300,
-      })
-        .addTo(ctrl)
-        .on("enter", function () {
-          var progressBar = $(".progress-bar");
-          progressBar.each(function () {
-            $(this).css({
-              width: $(this).attr("aria-valuenow") + "%",
-              "z-index": "2",
-            });
-          });
+      new ScrollMagic.Scene({ triggerElement: ".progress", triggerHook: "onEnter", duration: 300, })
+      .addTo(ctrl)
+      .on("enter", function () {
+        var progressBar = $(".progress-bar");
+        progressBar.each(function () {
+          $(this).css({ width: $(this).attr("aria-valuenow") + "%", "z-index": "2", });
         });
+      });
     });
   }
 
   // Preloader animation
   function preloader() {
     var tl = anime.timeline({});
-    tl.add({
-      targets: ".loader",
-      duration: 300,
-      opacity: 1,
-      easing: "easeInOutQuart",
-    })
-      .add(
-        {
-          targets: ".preloader__progress span",
-          duration: 500,
-          width: "100%",
-          easing: "easeInOutQuart",
-        },
-        "-=200"
-      )
-      .add({
-        targets: ".preloader",
-        duration: 500,
-        opacity: 0,
-        zIndex: -1,
-        easing: "easeInOutQuart",
-        complete: function () {
-          document.getElementById("loader").classList.add("hide");
-          document.getElementById("home").style.display = "block";
-          if (typeof initAnimations === "function") {
-            initAnimations();
-          }
-        },
-      });
+    tl.add({ targets: ".loader", duration: 300, opacity: 1, easing: "easeInOutQuart", })
+    .add({ targets: ".preloader__progress span", duration: 500, width: "100%", easing: "easeInOutQuart", }, "-=200")
+    .add({ targets: ".preloader", duration: 500, opacity: 0, zIndex: -1, easing: "easeInOutQuart",
+      complete: function () {
+        document.getElementById("loader").classList.add("hide");
+        document.getElementById("home").style.display = "block";
+        if (typeof initAnimations === "function") {
+          initAnimations();
+        }
+      },
+    });
   }
 
   preloader();
 
-  anime({
-    targets: "body",
-    opacity: 1,
-    delay: 400,
+  anime({ targets: "body", opacity: 1, delay: 400,
     complete: function () {
       progressBar();
     },
@@ -89,8 +60,7 @@ $(document).ready(function () {
     }
 
     function initCountUp(containerSelector, numberSelector = ".counter") {
-      const observer = new IntersectionObserver(
-        (entries) => {
+      const observer = new IntersectionObserver((entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
               document.querySelectorAll(numberSelector).forEach((el) => {
@@ -99,9 +69,7 @@ $(document).ready(function () {
               observer.disconnect();
             }
           });
-        },
-        { threshold: 0.5 }
-      );
+        }, { threshold: 0.5 });
 
       const container = document.querySelector(containerSelector);
       if (container) observer.observe(container);
@@ -111,22 +79,17 @@ $(document).ready(function () {
     // 2. Skills animation
     const initSkills = () => {
       const skillsSection = document.getElementById("skills");
-      const observer = new IntersectionObserver(
-        (entries) => {
+      const observer = new IntersectionObserver((entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
-              const progressBars =
-                entry.target.querySelectorAll(".progress-bar");
+              const progressBars = entry.target.querySelectorAll(".progress-bar");
               progressBars.forEach((progressBar) => {
-                progressBar.style.animation =
-                  "progressAnimation 3s ease-in-out forwards";
+                progressBar.style.animation = "progressAnimation 3s ease-in-out forwards";
               });
               observer.disconnect();
             }
           });
-        },
-        { threshold: 0.5 }
-      );
+        }, { threshold: 0.5 });
       skillsSection && observer.observe(skillsSection);
     };
     initSkills();
@@ -230,10 +193,7 @@ $(document).ready(function () {
       const sectionTop = current.offsetTop - 50;
       const sectionId = current.getAttribute("id");
       const link = document.querySelector(`.nav__menu a[href*="${sectionId}"]`);
-      link?.classList.toggle(
-        "active-link",
-        scrollY > sectionTop && scrollY <= sectionTop + sectionHeight
-      );
+      link?.classList.toggle( "active-link", scrollY > sectionTop && scrollY <= sectionTop + sectionHeight);
     });
   });
 
@@ -301,28 +261,20 @@ $(document).ready(function () {
 
   // ScrollReveal animations
   const sr = ScrollReveal({
-    origin: "top",
-    distance: "60px",
+    origin: 'top',
+    distance: '60px',
     duration: 2000,
     delay: 200,
     opacity: 0,
-    easing: "cubic-bezier(0.5, 0, 0, 1)",
+    easing: 'cubic-bezier(0.5, 0, 0, 1)',
     reset: true,
     mobile: true,
   });
   sr.reveal(`.profile__border, .profile__name`);
-  sr.reveal(
-    `.profile__social, .profile_profession, .profile__info-group, .profile__buttons, .projects__card, .skills__area, .resume__area, .certificate__item`,
-    { origin: "bottom" }
-  );
-  sr.reveal(`.note`, { origin: "left" });
-  sr.reveal(`.resume__step__time`, { origin: "right" });
-  sr.reveal(`.about__box .icon img`, {
-    origin: "bottom",
-    scale: 0.9,
-    rotate: { z: 45 },
-    reset: false,
-  });
+  sr.reveal(`.profile__social, .profile_profession, .profile__info-group, .profile__buttons, .projects__card, .skills__area, .resume__area`, { origin: 'bottom' });
+  sr.reveal(`.note`, { origin: 'left' });
+  sr.reveal(`.resume__step__time`, { origin: 'right' });
+  sr.reveal(`.about__box .icon img`, { origin: 'bottom', scale: 0.9, rotate: { z: 45 }, reset: false });
 
   // Typed.js for typing animation in header
   new Typed(".typing-text", {
@@ -337,12 +289,8 @@ $(document).ready(function () {
 
   // Random Color for .projects__tag
   const colorClasses = [
-    "projects__tag--blue",
-    "projects__tag--green",
-    "projects__tag--yellow",
-    "projects__tag--purple",
-    "projects__tag--gray",
-    "projects__tag--red",
+    'projects__tag--blue', 'projects__tag--green', 'projects__tag--yellow',
+    'projects__tag--purple', 'projects__tag--gray', 'projects__tag--red'
   ];
   document.querySelectorAll(".projects__tags").forEach((container) => {
     const tags = container.querySelectorAll(".projects__tag");
@@ -365,10 +313,7 @@ $(document).ready(function () {
 
   elementsToTranslate.forEach((element) => {
     if (!element.dataset.original) {
-      if (
-        (element.tagName === "INPUT" || element.tagName === "TEXTAREA") &&
-        element.hasAttribute("placeholder")
-      ) {
+      if ((element.tagName === "INPUT" || element.tagName === "TEXTAREA") && element.hasAttribute("placeholder")) {
         element.dataset.original = element.placeholder;
       } else {
         element.dataset.original = element.innerHTML;
@@ -380,10 +325,7 @@ $(document).ready(function () {
     document.body.classList.remove("language-en", "language-vi");
     document.body.classList.add(`language-${lang}`);
     elementsToTranslate.forEach((element) => {
-      if (
-        (element.tagName === "INPUT" || element.tagName === "TEXTAREA") &&
-        element.hasAttribute("placeholder")
-      ) {
+      if ((element.tagName === "INPUT" || element.tagName === "TEXTAREA") && element.hasAttribute("placeholder")) {
         if (lang === "vi") {
           element.placeholder = element.getAttribute("data-vi");
         } else {
@@ -407,9 +349,7 @@ $(document).ready(function () {
           finalHTML = viText.replace(linkText, newLink.outerHTML);
         }
         if (icon) {
-          const textOnly = tempDiv.textContent
-            .replace(icon.textContent, "")
-            .trim();
+          const textOnly = tempDiv.textContent.replace(icon.textContent, "").trim();
           const originalHTML = tempDiv.innerHTML.trim();
           const iconIndex = originalHTML.indexOf(icon.outerHTML);
           const textIndex = originalHTML.indexOf(textOnly);
@@ -503,12 +443,7 @@ $(document).ready(function () {
       currentCertificateIndex = index;
 
       // Setup popup for certificates
-      updateCertificatePopup(
-        imgElement,
-        titleElement,
-        issuerElement,
-        dateElement
-      );
+      updateCertificatePopup( imgElement, titleElement, issuerElement, dateElement );
 
       // Show navigation for certificates
       popupNavigation.classList.remove("photo-mode");
@@ -520,12 +455,7 @@ $(document).ready(function () {
   });
 
   // Function to update certificate popup content
-  function updateCertificatePopup(
-    imgElement,
-    titleElement,
-    issuerElement,
-    dateElement
-  ) {
+  function updateCertificatePopup( imgElement, titleElement, issuerElement, dateElement ) {
     popupImage.src = imgElement.src;
     popupImage.alt = imgElement.alt;
     popupTitle.textContent = titleElement.textContent;
@@ -543,9 +473,7 @@ $(document).ready(function () {
   popupPrev.addEventListener("click", function () {
     if (isPhotoMode) return;
 
-    currentCertificateIndex =
-      (currentCertificateIndex - 1 + certificateItems.length) %
-      certificateItems.length;
+    currentCertificateIndex = (currentCertificateIndex - 1 + certificateItems.length) % certificateItems.length;
     const item = certificateItems[currentCertificateIndex];
 
     const imgElement = item.querySelector("img");
@@ -553,20 +481,14 @@ $(document).ready(function () {
     const issuerElement = item.querySelector(".certificate__issuer");
     const dateElement = item.querySelector(".certificate__date");
 
-    updateCertificatePopup(
-      imgElement,
-      titleElement,
-      issuerElement,
-      dateElement
-    );
+    updateCertificatePopup( imgElement, titleElement, issuerElement, dateElement );
   });
 
   // Navigate to next certificate
   popupNext.addEventListener("click", function () {
     if (isPhotoMode) return;
 
-    currentCertificateIndex =
-      (currentCertificateIndex + 1) % certificateItems.length;
+    currentCertificateIndex = (currentCertificateIndex + 1) % certificateItems.length;
     const item = certificateItems[currentCertificateIndex];
 
     const imgElement = item.querySelector("img");
@@ -574,12 +496,7 @@ $(document).ready(function () {
     const issuerElement = item.querySelector(".certificate__issuer");
     const dateElement = item.querySelector(".certificate__date");
 
-    updateCertificatePopup(
-      imgElement,
-      titleElement,
-      issuerElement,
-      dateElement
-    );
+    updateCertificatePopup( imgElement, titleElement, issuerElement, dateElement );
   });
 
   // Keyboard navigation
@@ -660,9 +577,7 @@ $(document).ready(function () {
   // setTimeout(initStarAnimation, 300);
 
   // Initialize EmailJS with contact form
-  document
-    .getElementById("contact-form")
-    .addEventListener("submit", function (event) {
+  document.getElementById("contact-form").addEventListener("submit", function (event) {
       event.preventDefault();
 
       const recaptchaResponse = grecaptcha.getResponse();
@@ -684,12 +599,9 @@ $(document).ready(function () {
       const submitButton = this.querySelector('button[type="submit"]');
       const originalButtonText = submitButton.innerHTML;
       submitButton.disabled = true;
-      submitButton.innerHTML =
-        '<i class="fa-solid fa-spinner fa-spin"></i> ĐANG GỬI...';
+      submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ĐANG GỬI...';
 
-      emailjs
-        .sendForm("service_swfnmkm", "template_n0r8ice", this)
-        .then(function (response) {
+      emailjs.sendForm("service_swfnmkm", "template_n0r8ice", this).then(function (response) {
           Swal.fire({
             icon: "success",
             title: "Thành công!",
@@ -741,8 +653,7 @@ $(document).ready(function () {
 
   function updateSendButtonState() {
     const isValidMessage = messageInput.value.trim().length > 0;
-    sendMessageButton.style.display =
-      isValidMessage && !isBotResponding ? "block" : "none";
+    sendMessageButton.style.display = isValidMessage && !isBotResponding ? "block" : "none";
     sendMessageButton.disabled = isBotResponding;
   }
 
@@ -753,9 +664,7 @@ $(document).ready(function () {
     }
 
     if (!isAutoScrolling) {
-      const isScrolledToBottom =
-        chatBody.scrollHeight - chatBody.scrollTop <=
-        chatBody.clientHeight + 100;
+      const isScrolledToBottom = chatBody.scrollHeight - chatBody.scrollTop <= chatBody.clientHeight + 100;
       if (!isScrolledToBottom) {
         scrollToBottomBtn.classList.add("show");
       } else {
@@ -785,9 +694,7 @@ $(document).ready(function () {
   const chatHistory = [
     {
       role: "model",
-      parts: [
-        {
-          text: `Giới thiệu:
+      parts: [{text: `Giới thiệu:
 
   Chào mừng bạn đến với trợ lý ảo được xây dựng dựa trên thông tin về Đinh Duy Vinh, một tài năng trẻ đầy triển vọng trong lĩnh vực Công nghệ Thông tin. Tôi được tạo ra để cung cấp cho bạn cái nhìn toàn diện về con người, hành trình học tập, những kỹ năng chuyên môn ấn tượng và vô số dự án sáng tạo mà Vinh đã và đang thực hiện. Hãy khám phá thế giới công nghệ đầy đam mê của Vinh qua những thông tin chi tiết dưới đây.
 
@@ -827,7 +734,7 @@ $(document).ready(function () {
 
   Để lan tỏa kiến thức và kết nối với cộng đồng, Vinh đã xây dựng và duy trì một hệ sinh thái các trang web và ứng dụng cá nhân đa dạng. Những "ngôi nhà ảo" này không chỉ là nơi anh giới thiệu các dự án mà còn là nơi chia sẻ những kinh nghiệm và kiến thức quý báu:
 
-  dinhduyvinh.me: Trang web tổng hợp thông tin cá nhân, portfolio và các dự án nổi bật của Vinh.
+  dinhduyvinh.dev: Trang web tổng hợp thông tin cá nhân, portfolio và các dự án nổi bật của Vinh.
   dinhduyvinh.eu.org: Trang thông tin thanh toán (có thể được sử dụng cho các mục đích liên hệ hoặc hỗ trợ).
   upanh.vercel.app: Ứng dụng web đơn giản để tải ảnh lên Imgur một cách nhanh chóng.
   crusssh.vercel.app: Một không gian trực tuyến cá nhân, có thể là nơi Vinh thử nghiệm các ý tưởng hoặc chia sẻ những sở thích cá nhân.
@@ -849,9 +756,7 @@ $(document).ready(function () {
 
   Những dòng code không chỉ là những ký tự vô tri mà còn là ngôn ngữ để Vinh thể hiện sự sáng tạo, kết nối với thế giới và hiện thực hóa những ý tưởng độc đáo. Hành trình chinh phục công nghệ của Đinh Duy Vinh vẫn đang tiếp diễn, hứa hẹn sẽ còn gặt hái được nhiều thành công hơn nữa và mang đến những đóng góp ý nghĩa hơn cho cộng đồng công nghệ Việt Nam và xa hơn thế nữa.
 
-  Hãy kết nối với chúng tôi (chatbot được xây dựng dựa trên thông tin của Vinh) để khám phá thêm về những dự án, kỹ năng và tầm nhìn của Đinh Duy Vinh. Tôi luôn sẵn sàng cung cấp thông tin chi tiết và hỗ trợ bạn tìm hiểu về chàng trai tài năng này.`,
-        },
-      ],
+  Hãy kết nối với chúng tôi (chatbot được xây dựng dựa trên thông tin của Vinh) để khám phá thêm về những dự án, kỹ năng và tầm nhìn của Đinh Duy Vinh. Tôi luôn sẵn sàng cung cấp thông tin chi tiết và hỗ trợ bạn tìm hiểu về chàng trai tài năng này.`}],
     },
   ];
 
@@ -865,9 +770,7 @@ $(document).ready(function () {
     return div;
   };
 
-  const notificationSound = new Audio(
-    "./assets/sounds/notification-sound-effect.mp3"
-  );
+  const notificationSound = new Audio( "./assets/sounds/notification-sound-effect.mp3" );
   notificationSound.volume = 1.0;
 
   function markdownToHTML(text) {
@@ -876,9 +779,7 @@ $(document).ready(function () {
       // Code block (```lang\n...\n```)
       .replace(/```(\w*)\n([\s\S]*?)```/g, (match, lang, code) => {
         const safeCode = code.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        return `<pre><code class="language-${
-          lang || ""
-        }">${safeCode}</code></pre>`;
+        return `<pre><code class="language-${lang || ""}">${safeCode}</code></pre>`;
       })
       .replace(/`([^`]+)`/g, "<code>$1</code>") // Inline code (phải đặt sau code block)
       .replace(/^###### (.*$)/gm, "<h6>$1</h6>") // Tiêu đề
@@ -892,14 +793,8 @@ $(document).ready(function () {
       .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // In đậm
       .replace(/\*(.*?)\*/g, "<em>$1</em>") // In nghiêng
       .replace(/~~(.*?)~~/g, "<del>$1</del>") // Gạch ngang
-      .replace(
-        /\[([^\]]+)\]\(([^)]+)\)/g,
-        '<a href="$2" target="_blank" rel="noopener">$1</a>'
-      ) // Link
-      .replace(
-        /!\[([^\]]*)\]\(([^)]+)\)/g,
-        '<img src="$2" alt="$1" style="max-width:100%;"/>'
-      ) // Hình ảnh
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>') // Link
+      .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" style="max-width:100%;"/>') // Hình ảnh
       .replace(/^> (.*$)/gm, "<blockquote>$1</blockquote>") // Blockquote
       .replace(/^\-\-\-$/gm, "<hr/>"); // Horizontal rule
     html = html.replace(/(<li>.*<\/li>)+/gms, (m) => {
@@ -911,8 +806,7 @@ $(document).ready(function () {
       .replace(/\n/g, "<br/>") // Xuống dòng trong đoạn
       .replace(/(^|<\/[^>]+>)([^<]*?)(<[^>]+>|$)/g, (m, p1, p2, p3) => {
         if (!p2.trim()) return m;
-        const isBlockElement =
-          /<\/?(h[1-6]|pre|code|ul|ol|li|blockquote|hr)/i.test(p1 + p3);
+        const isBlockElement = /<\/?(h[1-6]|pre|code|ul|ol|li|blockquote|hr)/i.test(p1 + p3);
         return isBlockElement ? m : p1 + "<p>" + p2 + "</p>" + p3;
       });
     return html;
@@ -938,10 +832,7 @@ $(document).ready(function () {
 
     chatHistory.push({
       role: "user",
-      parts: [
-        { text: userData.message },
-        ...(userData.file.data ? [{ inline_data: userData.file }] : []),
-      ],
+      parts: [{ text: userData.message }, ...(userData.file.data ? [{ inline_data: userData.file }] : [])],
     });
 
     const requestOptions = {
@@ -1004,18 +895,9 @@ $(document).ready(function () {
     fileUploadWrapper.classList.remove("file-uploaded");
     messageInput.dispatchEvent(new Event("input"));
     const messageContent = `<div class="message-text"></div>
-                              ${
-                                userData.file.data
-                                  ? `<img src="data:${userData.file.mime_type};base64,${userData.file.data}" class="attachment" />`
-                                  : ""
-                              }`;
-    const outgoingMessageDiv = createMessageElement(
-      messageContent,
-      "user-message"
-    );
-    outgoingMessageDiv.querySelector(".message-text").innerHTML = `${
-      userData.message
-    }<span class="message-time">${formatTime()}</span>`;
+                              ${userData.file.data ? `<img src="data:${userData.file.mime_type};base64,${userData.file.data}" class="attachment" />` : ""}`;
+    const outgoingMessageDiv = createMessageElement(messageContent, "user-message");
+    outgoingMessageDiv.querySelector(".message-text").innerHTML = `${userData.message}<span class="message-time">${formatTime()}</span>`;
     chatBody.appendChild(outgoingMessageDiv);
     chatBody.scrollTop = chatBody.scrollHeight;
 
@@ -1030,11 +912,7 @@ $(document).ready(function () {
                           <div class="dot"></div>
                       </div>
                   </div>`;
-      const incomingMessageDiv = createMessageElement(
-        messageContent,
-        "bot-message",
-        "thinking"
-      );
+      const incomingMessageDiv = createMessageElement(messageContent, "bot-message", "thinking");
       chatBody.appendChild(incomingMessageDiv);
       chatBody.scrollTo({ behavior: "smooth", top: chatBody.scrollHeight });
       isAutoScrolling = true;
@@ -1052,13 +930,7 @@ $(document).ready(function () {
 
   messageInput.addEventListener("keydown", (e) => {
     const userMessage = e.target.value.trim();
-    if (
-      e.key === "Enter" &&
-      userMessage &&
-      !e.shiftKey &&
-      window.innerWidth > 768 &&
-      !isBotResponding
-    ) {
+    if (e.key === "Enter" && userMessage && !e.shiftKey && window.innerWidth > 768 && !isBotResponding) {
       handleOutgoingMessage(e);
     }
   });
@@ -1066,8 +938,7 @@ $(document).ready(function () {
   messageInput.addEventListener("input", (e) => {
     messageInput.style.height = `${initialInputHeight}px`;
     messageInput.style.height = `${messageInput.scrollHeight}px`;
-    document.querySelector(".chat-form").style.borderRadius =
-      messageInput.scrollHeight > initialInputHeight ? "15px" : "32px";
+    document.querySelector(".chat-form").style.borderRadius = messageInput.scrollHeight > initialInputHeight ? "15px" : "32px";
     updateSendButtonState();
   });
 
@@ -1116,12 +987,7 @@ $(document).ready(function () {
   fileInput.addEventListener("change", async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const validImageTypes = [
-      "image/jpeg",
-      "image/png",
-      "image/gif",
-      "image/webp",
-    ];
+    const validImageTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
 
     if (!validImageTypes.includes(file.type)) {
       await Swal.fire({
@@ -1161,13 +1027,7 @@ $(document).ready(function () {
     }
   });
 
-  document
-    .querySelector("#file-upload")
-    .addEventListener("click", (e) => fileInput.click());
-  chatbotToggler.addEventListener("click", () =>
-    document.body.classList.toggle("show-chatbot")
-  );
-  closeChatbot.addEventListener("click", () =>
-    document.body.classList.remove("show-chatbot")
-  );
+  document.querySelector("#file-upload").addEventListener("click", (e) => fileInput.click());
+  chatbotToggler.addEventListener("click", () => document.body.classList.toggle("show-chatbot"));
+  closeChatbot.addEventListener("click", () => document.body.classList.remove("show-chatbot"));
 });

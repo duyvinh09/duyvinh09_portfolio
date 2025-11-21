@@ -93,6 +93,24 @@ document.addEventListener("DOMContentLoaded", () => {
       skillsSection && observer.observe(skillsSection);
     };
     initSkills();
+
+    // 3. ScrollReveal animations
+    const sr = ScrollReveal({
+      origin: 'top',
+      distance: '60px',
+      duration: 2000,
+      delay: 200,
+      opacity: 0,
+      easing: 'cubic-bezier(0.5, 0, 0, 1)',
+      reset: true,
+      mobile: true,
+    });
+    
+    sr.reveal(`.profile__border, .profile__name`);
+    sr.reveal(`.profile__social, .profile_profession, .profile__info-group, .profile__buttons, .projects__card, .skills__area, .resume__area`, { origin: 'bottom' });
+    sr.reveal(`.note`, { origin: 'left' });
+    sr.reveal(`.resume__step__time`, { origin: 'right' });
+    sr.reveal(`.about__box .icon img`, { origin: 'bottom', scale: 0.9, rotate: { z: 45 }, reset: false });
   }
 
   // Bottom Navigation Menu
@@ -258,23 +276,6 @@ document.addEventListener("DOMContentLoaded", () => {
       element.style.cursor = 'url("./assets/img/mouse/mouse-f2.png"), auto';
     }
   });
-
-  // ScrollReveal animations
-  const sr = ScrollReveal({
-    origin: 'top',
-    distance: '60px',
-    duration: 2000,
-    delay: 200,
-    opacity: 0,
-    easing: 'cubic-bezier(0.5, 0, 0, 1)',
-    reset: true,
-    mobile: true,
-  });
-  sr.reveal(`.profile__border, .profile__name`);
-  sr.reveal(`.profile__social, .profile_profession, .profile__info-group, .profile__buttons, .projects__card, .skills__area, .resume__area`, { origin: 'bottom' });
-  sr.reveal(`.note`, { origin: 'left' });
-  sr.reveal(`.resume__step__time`, { origin: 'right' });
-  sr.reveal(`.about__box .icon img`, { origin: 'bottom', scale: 0.9, rotate: { z: 45 }, reset: false });
 
   // Typed.js for typing animation in header
   new Typed(".typing-text", {

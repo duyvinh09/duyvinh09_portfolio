@@ -638,7 +638,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeChatbot = document.querySelector("#close-chatbot");
   const scrollToBottomBtn = document.querySelector("#scroll-to-bottom");
   const API_KEY = "AIzaSyBd7Gd36plX9rEq9VXQ6TGs9kkOmvtYgm0";
-  const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
+  const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${API_KEY}`;
 
   const userData = {
     message: null,

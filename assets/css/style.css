@@ -327,15 +327,23 @@ header.scrolled {
 }
 
 .h__logo {
-    color: var(--container-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     font-weight: 500;
-    transition: 0.4s;
     font-size: 0.938rem;
-    transition: background-color 0.5s ease;
 }
 
-.h__logo:hover {
+.h__logo i {
     color: var(--first-color);
+}
+
+.h__logo .typing-text {
+    color: var(--container-color);
+}
+
+.h__logo:hover .typing-text {
+    color: var(--first-color-alt);
     transition: background-color 0.5s ease;
 }
 
@@ -2606,7 +2614,8 @@ body.show-emoji-picker em-emoji-picker {
 
 /* Shapes */
 .global_shapes {
-    position: fixed;
+    /* position: fixed; */
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -2633,7 +2642,7 @@ body.dark .global_shapes {
     transform: translate(-50%, -50%);
     object-fit: cover;
     mix-blend-mode: soft-light;
-  /* opacity: .9; */
+    opacity: .6;
 }
 
 /*=============== BREAKPOINTS ==============*/

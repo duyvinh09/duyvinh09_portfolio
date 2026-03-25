@@ -279,13 +279,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Typed.js for typing animation in header
   new Typed(".typing-text", {
-    strings: ["<b>DUYVINH</b>", "PROGRAMMER", "DEVELOPER", "DESIGNER"],
-    typeSpeed: 150,
-    backSpeed: 100,
-    loop: true,
-    showCursor: true,
-    cursorChar: "|",
-    smartBackspace: true,
+    strings: ['Developer', 'Designer', 'Coder', 'Creator'],
+    typeSpeed: 100,
+    backSpeed: 60,
+    backDelay: 1500,
+    loop: true
   });
 
   // Random Color for .projects__tag

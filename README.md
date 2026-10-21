@@ -48,6 +48,23 @@ Trang portfolio này còn được tích hợp một **chatbot AI thông minh** 
 - **Nền tảng AI**: Gemini API
 - **Xử lý ảnh**: Gemini API
 
+### Cấu hình Gemini API
+
+Chatbot đọc API key từ biến `window.GEMINI_API_KEY` trước khi tải
+`assets/js/main.js`. Khi chạy local, thêm một thẻ script ngay trước thẻ
+`main.js` trong `index.html`:
+
+```html
+<script>
+  window.GEMINI_API_KEY = "YOUR_GEMINI_API_KEY";
+</script>
+<script src="./assets/js/main.js"></script>
+```
+
+Không commit API key thật vào mã nguồn. Với website public, nên gọi Gemini
+thông qua backend/serverless function để giữ API key ở phía server; đồng thời
+hãy thu hồi key cũ nếu key đã từng được đưa lên repository hoặc website.
+
 Hãy thử tương tác với chatbot để khám phá thêm những điều thú vị!
 
 ## 📬 Liên Hệ

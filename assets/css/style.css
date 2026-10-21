@@ -121,13 +121,13 @@ body {
     transition: font-family 0.3s ease;
     display: block;
     /* chặn select cho các trình duyệt */
-    -khtml-user-select: none;
+    /* -khtml-user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     -o-user-select: none;
     user-select: none;
-    unselectable: on;
+    unselectable: on; */
 }
 
 a {

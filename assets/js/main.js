@@ -635,8 +635,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const chatbotToggler = document.querySelector("#chatbot-toggler");
   const closeChatbot = document.querySelector("#close-chatbot");
   const scrollToBottomBtn = document.querySelector("#scroll-to-bottom");
-  const API_KEY = "AIzaSyDKe_Amp5OzPjRTgpfJdxe1FymamxP2LBA";
-  const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
+  const API_KEY = window.GEMINI_API_KEY || "";
+  const API_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models";
+  const API_MODELS = ["gemini-3.8-flash", "gemini-2.5-flash"];
 
   const userData = {
     message: null,
@@ -824,6 +825,44 @@ document.addEventListener("DOMContentLoaded", () => {
     return `${hours}:${minutes}`;
   }
 
+  const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+
+  async function requestGeminiResponse(requestOptions) {
+    let lastError;
+
+    for (const model of API_MODELS) {
+      for (let attempt = 0; attempt < 2; attempt += 1) {
+        try {
+          const response = await fetch(`${API_BASE_URL}/${model}:generateContent`, requestOptions);
+          const data = await response.json();
+
+          if (response.ok) return data;
+
+          const error = new Error(data.error?.message || `Gemini API lỗi (${response.status}).`);
+          error.status = response.status;
+          lastError = error;
+
+          const isRetryable = [429, 500, 502, 503, 504].includes(response.status);
+          if (!isRetryable) throw error;
+          if (attempt === 0) await wait(1200);
+        } catch (error) {
+          lastError = error;
+          if (error.name === "TypeError" && attempt === 0) {
+            await wait(1200);
+            continue;
+          }
+          if (error.status && ![429, 500, 502, 503, 504].includes(error.status)) {
+            throw error;
+          }
+        }
+      }
+    }
+
+    throw new Error(
+      "Gemini đang quá tải. Vui lòng thử lại sau vài giây. Nếu lỗi tiếp tục, hãy kiểm tra giới hạn API key trong Google AI Studio."
+    );
+  }
+
   const generateBotResponse = async (incomingMessageDiv) => {
     isBotResponding = true;
     updateSendButtonState();
@@ -836,17 +875,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "x-goog-api-key": API_KEY,
+      },
       body: JSON.stringify({
         contents: chatHistory,
       }),
     };
 
     try {
-      const response = await fetch(API_URL, requestOptions);
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error.message);
-      let apiResponseText = data.candidates[0].content.parts[0].text;
+      if (!API_KEY) {
+        throw new Error("Chưa cấu hình GEMINI_API_KEY cho chatbot.");
+      }
+
+      const data = await requestGeminiResponse(requestOptions);
+      let apiResponseText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!apiResponseText) {
+        throw new Error("Gemini API không trả về nội dung phản hồi.");
+      }
       apiResponseText = apiResponseText.replace(/\n+$/, "");
       let htmlResponse = "";
 

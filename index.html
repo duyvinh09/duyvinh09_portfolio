@@ -221,6 +221,12 @@
                   <i class="fa-brands fa-github"></i>
                 </a>
               </li>
+              <li>
+                <a href="https://www.linkedin.com/in/duyvinh09/" class="profile__social_link" target="_blank"
+                  rel="noopener noreferrer" aria-label="LinkedIn">
+                  <i class="fa-brands fa-linkedin"></i>
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -237,7 +243,7 @@
             <div class="profile__info-group">
               <h3 class="profile__info_number">
                 <i class="fa-solid fa-file-certificate"></i>
-                <span class="counter">10</span>+
+                <span class="counter certificate-counter">7</span>+
               </h3>
               <p class="profile__info-description" data-vi="Chứng chỉ<br>đạt được">
                 Certificates<br>Earned
@@ -536,6 +542,28 @@
               </div>
             </div>
           </article>
+          <article class="projects__card">
+            <img src="./assets/img/image/tiktokdownload.webp" class="projects__img" alt="tiktokdownload"
+              loading="lazy">
+            <div class="projects__modal">
+              <div class="projects__tags">
+                <span class="projects__tag" data-vi="tiện ích">utility</span>
+                <span class="projects__tag" data-vi="IOS">IOS</span>
+              </div>
+              <div>
+                <span class="projects__subtitle" data-vi="Kiểm tra thông tin và tải video TikTok">
+                  Instructions to Check Information and Download TikTok Videos
+                </span>
+                <h3 class="projects__title" data-vi="Kiểm tra thông tin và tải video TikTok">
+                  Check Information and Download TikTok Videos
+                </h3>
+                <a href="https://tiktokscan.netlify.app/" class="projects__button button button_small"
+                  aria-label="Visit TikTok Scan" target="_blank" rel="noopener noreferrer">
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+              </div>
+            </div>
+          </article>
         </div>
       </div>
     </section>
@@ -700,6 +728,10 @@
           <div class="popup__content">
             <button class="popup__close"><i class="fa-solid fa-xmark"></i></button>
             <img class="popup__image" src="" alt="" loading="lazy">
+            <a class="popup__certificate-link" href="#" target="_blank" rel="noopener noreferrer">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              <span data-vi="Mở chứng chỉ">Open certificate</span>
+            </a>
             <div class="popup__navigation">
               <button class="popup__prev"><i class="fa-solid fa-chevron-left"></i></button>
               <button class="popup__next"><i class="fa-solid fa-chevron-right"></i></button>
@@ -851,16 +883,16 @@
         <div class="certificates__carousel">
           <h3 data-vi="Chứng Chỉ Của Tớ">My Certificates</h3>
           <div class="certificates__wrapper">
-            <!-- Certificate Item 1 -->
-            <div class="certificate__item">
+            <div class="certificate__item"
+              data-certificate-link="https://coursera.org/share/dc328f85517bea31dddaef1fd19da803">
               <h4 class="certificate__title" data-vi="Google AI">Google AI</h4>
               <span class="certificate__issuer">Google</span>
               <span class="certificate__date">2026</span>
               <img src="./assets/img/certificate/Google_AI.webp" alt="Google AI" loading="lazy">
             </div>
 
-            <!-- Certificate Item 2 -->
-            <div class="certificate__item">
+            <div class="certificate__item"
+              data-certificate-link="https://coursera.org/share/d8a4301ad3aff1e57ecb47251b769691">
               <h4 class="certificate__title" data-vi="Quản lý dự án">Google Project Management</h4>
               <span class="certificate__issuer">Google</span>
               <span class="certificate__date">2026</span>
@@ -868,21 +900,72 @@
                 loading="lazy">
             </div>
 
-            <!-- Certificate Item 3 -->
-            <div class="certificate__item">
+            <div class="certificate__item"
+              data-certificate-link="https://coursera.org/share/e4d77e6863fdde88ce1911b9a5d38636">
               <h4 class="certificate__title" data-vi="An toàn thông tin">Google Cybersecurity</h4>
               <span class="certificate__issuer">Google</span>
               <span class="certificate__date">2026</span>
               <img src="./assets/img/certificate/Google_Cybersecurity.webp" alt="Google Cybersecurity" loading="lazy">
             </div>
 
-            <!-- Certificate Item 4 -->
-            <div class="certificate__item">
+            <div class="certificate__item"
+              data-certificate-link="https://coursera.org/share/64f43340bfb307e1d4f5ac8444c8fc64">
               <h4 class="certificate__title" data-vi="Google Phân Tích Dữ Liệu">Google Data Analytics</h4>
               <span class="certificate__issuer">Google</span>
               <span class="certificate__date">2026</span>
               <img src="./assets/img/certificate/Google_Data_Analytics.webp" alt="Google Data Analytics" loading="lazy">
             </div>
+
+            <div class="certificate__item"
+              data-certificate-link="https://coursera.org/share/107aa46a3847969ff1ab6174aaff6b8d">
+              <h4 class="certificate__title" data-vi="Google AI Essentials">Google AI Essentials</h4>
+              <span class="certificate__issuer">Google</span>
+              <span class="certificate__date">2026</span>
+              <img src="./assets/img/certificate/Google_AI_Essentials.webp" alt="Google AI Essentials" loading="lazy">
+            </div>
+
+            <div class="certificate__item"
+              data-certificate-link="https://coursera.org/share/293f38515f4eb90599c020bfb47f54de">
+              <h4 class="certificate__title" data-vi="Google Network Security">Google Network Security</h4>
+              <span class="certificate__issuer">Google</span>
+              <span class="certificate__date">2026</span>
+              <img src="./assets/img/certificate/Google_Network_Security.webp" alt="Google Network Security"
+                loading="lazy">
+            </div>
+
+            <div class="certificate__item"
+              data-certificate-link="https://coursera.org/share/376749f74c2704af7338aa8a39c11229">
+              <h4 class="certificate__title" data-vi="Google UX Design">Google UX Design</h4>
+              <span class="certificate__issuer">Google</span>
+              <span class="certificate__date">2026</span>
+              <img src="./assets/img/certificate/Google_UX_Design.webp" alt="Google UX Design" loading="lazy">
+            </div>
+
+            <div class="certificate__item"
+              data-certificate-link="https://coursera.org/share/a895dd80df33eb0041251c9845b38a79">
+              <h4 class="certificate__title" data-vi="Google Prompting Essentials">Google Prompting Essentials</h4>
+              <span class="certificate__issuer">Google</span>
+              <span class="certificate__date">2026</span>
+              <img src="./assets/img/certificate/Google_Prompting.webp" alt="Google Prompting Essentials" loading="lazy">
+            </div>
+
+            <div class="certificate__item">
+              <h4 class="certificate__title" data-vi="Gemini Certified University Student">Gemini Certified University Student</h4>
+              <span class="certificate__issuer">Google</span>
+              <span class="certificate__date">2025</span>
+              <img src="./assets/img/certificate/Gemini_Certified_University_Student.webp" alt="Gemini Certified University Student" loading="lazy">
+            </div>
+          </div>
+          <div class="certificates__pagination" aria-label="Certificate pagination">
+            <button type="button" class="certificates__page-button certificates__page-prev"
+              aria-label="Previous certificates">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <div class="certificates__page-status" role="tablist" aria-label="Certificate pages"></div>
+            <button type="button" class="certificates__page-button certificates__page-next"
+              aria-label="Next certificates">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
           </div>
         </div>
       </div>

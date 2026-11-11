@@ -74,6 +74,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const container = document.querySelector(containerSelector);
       if (container) observer.observe(container);
     }
+    const certificateCounter = document.querySelector(".certificate-counter");
+    const certificateCount = document.querySelectorAll(".certificate__item").length;
+    if (certificateCounter) certificateCounter.textContent = certificateCount;
     initCountUp(".profile__info");
 
     // 2. Skills animation
@@ -392,6 +395,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const popupPrev = document.querySelector(".popup__prev");
   const popupNext = document.querySelector(".popup__next");
   const popupNavigation = document.querySelector(".popup__navigation");
+  const popupCertificateLink = document.querySelector(".popup__certificate-link");
 
   // Variables to track current certificate
   let currentCertificateIndex = 0;
@@ -419,6 +423,7 @@ document.addEventListener("DOMContentLoaded", () => {
       popupCaption.style.display = "block";
       popupIssuer.style.display = "none";
       popupDate.style.display = "none";
+      popupCertificateLink.style.display = "none";
 
       // Hide navigation for photos
       popupNavigation.classList.add("photo-mode");
@@ -431,6 +436,92 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Handle certificate items
   certificateItems = document.querySelectorAll(".certificate__item");
+  const certificatesPerPage = 4;
+  let currentCertificatePage = 1;
+  const certificatesPageStatus = document.querySelector(".certificates__page-status");
+  const certificatesPagePrev = document.querySelector(".certificates__page-prev");
+  const certificatesPageNext = document.querySelector(".certificates__page-next");
+  const certificatesWrapper = document.querySelector(".certificates__wrapper");
+  const totalCertificatePages = Math.ceil(certificateItems.length / certificatesPerPage);
+  let touchStartX = 0;
+
+  function createCertificatePageDots() {
+    if (!certificatesPageStatus) return;
+
+    certificatesPageStatus.innerHTML = "";
+    for (let page = 1; page <= totalCertificatePages; page += 1) {
+      const dot = document.createElement("button");
+      dot.type = "button";
+      dot.className = "certificates__page-dot";
+      dot.setAttribute("role", "tab");
+      dot.setAttribute("aria-label", `Go to certificate page ${page}`);
+      dot.addEventListener("click", () => {
+        currentCertificatePage = page;
+        renderCertificatePage(page > currentCertificatePage ? 1 : -1);
+      });
+      certificatesPageStatus.appendChild(dot);
+    }
+  }
+
+  function renderCertificatePage(direction = 1) {
+    const firstItemIndex = (currentCertificatePage - 1) * certificatesPerPage;
+    certificateItems.forEach((item, index) => {
+      item.classList.toggle(
+        "is-hidden",
+        index < firstItemIndex || index >= firstItemIndex + certificatesPerPage
+      );
+    });
+
+    certificatesPageStatus?.querySelectorAll(".certificates__page-dot").forEach((dot, index) => {
+      const isActive = index + 1 === currentCertificatePage;
+      dot.classList.toggle("active", isActive);
+      dot.setAttribute("aria-selected", String(isActive));
+    });
+    if (certificatesPagePrev) certificatesPagePrev.disabled = currentCertificatePage === 1;
+    if (certificatesPageNext) certificatesPageNext.disabled = currentCertificatePage === totalCertificatePages;
+    const certificatesPagination = document.querySelector(".certificates__pagination");
+    if (certificatesPagination) certificatesPagination.style.display = totalCertificatePages > 1 ? "flex" : "none";
+
+    if (certificatesWrapper && totalCertificatePages > 1) {
+      certificatesWrapper.classList.remove("page-changing", "previous");
+      void certificatesWrapper.offsetWidth;
+      certificatesWrapper.classList.add("page-changing");
+      if (direction < 0) certificatesWrapper.classList.add("previous");
+    }
+  }
+
+  certificatesPagePrev?.addEventListener("click", () => {
+    if (currentCertificatePage > 1) {
+      currentCertificatePage -= 1;
+      renderCertificatePage(-1);
+    }
+  });
+
+  certificatesPageNext?.addEventListener("click", () => {
+    if (currentCertificatePage < totalCertificatePages) {
+      currentCertificatePage += 1;
+      renderCertificatePage(1);
+    }
+  });
+
+  certificatesWrapper?.addEventListener("touchstart", (event) => {
+    touchStartX = event.changedTouches[0].screenX;
+  }, { passive: true });
+
+  certificatesWrapper?.addEventListener("touchend", (event) => {
+    const touchDistance = event.changedTouches[0].screenX - touchStartX;
+    if (Math.abs(touchDistance) < 50) return;
+
+    if (touchDistance < 0) {
+      certificatesPageNext?.click();
+    } else {
+      certificatesPagePrev?.click();
+    }
+  }, { passive: true });
+
+  createCertificatePageDots();
+  renderCertificatePage();
+
   certificateItems.forEach((item, index) => {
     item.addEventListener("click", function () {
       const imgElement = this.querySelector("img");
@@ -442,7 +533,7 @@ document.addEventListener("DOMContentLoaded", () => {
       currentCertificateIndex = index;
 
       // Setup popup for certificates
-      updateCertificatePopup( imgElement, titleElement, issuerElement, dateElement );
+      updateCertificatePopup(imgElement, titleElement, issuerElement, dateElement, this.dataset.certificateLink);
 
       // Show navigation for certificates
       popupNavigation.classList.remove("photo-mode");
@@ -454,7 +545,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Function to update certificate popup content
-  function updateCertificatePopup( imgElement, titleElement, issuerElement, dateElement ) {
+  function updateCertificatePopup(imgElement, titleElement, issuerElement, dateElement, certificateLink) {
     popupImage.src = imgElement.src;
     popupImage.alt = imgElement.alt;
     popupTitle.textContent = titleElement.textContent;
@@ -466,6 +557,8 @@ document.addEventListener("DOMContentLoaded", () => {
     popupDate.style.display = "inline-block";
     popupTime.style.display = "none";
     popupCaption.style.display = "none";
+    popupCertificateLink.href = certificateLink || "#";
+    popupCertificateLink.style.display = certificateLink ? "inline-flex" : "none";
   }
 
   // Navigate to previous certificate
@@ -480,7 +573,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const issuerElement = item.querySelector(".certificate__issuer");
     const dateElement = item.querySelector(".certificate__date");
 
-    updateCertificatePopup( imgElement, titleElement, issuerElement, dateElement );
+    updateCertificatePopup(imgElement, titleElement, issuerElement, dateElement, item.dataset.certificateLink);
   });
 
   // Navigate to next certificate
@@ -495,7 +588,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const issuerElement = item.querySelector(".certificate__issuer");
     const dateElement = item.querySelector(".certificate__date");
 
-    updateCertificatePopup( imgElement, titleElement, issuerElement, dateElement );
+    updateCertificatePopup(imgElement, titleElement, issuerElement, dateElement, item.dataset.certificateLink);
   });
 
   // Keyboard navigation
